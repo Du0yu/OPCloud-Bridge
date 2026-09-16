@@ -1,0 +1,2410 @@
+{
+  "name": "Two-Dish Dinner Cooking System - Corrected",
+  "description": "Two peer cooking processes prepare two dishes. The complete dinner aggregates the two ready dishes.",
+  "archiveMode": {
+    "archiveMode": false,
+    "date": "",
+    "user": ""
+  },
+  "permissions": null,
+  "currentOpd": {
+    "name": "SD",
+    "id": "SD",
+    "parendId": "SD",
+    "visualElements": [
+      "6012287f-6e47-4910-a2a1-09a92786dd62",
+      "02c8e04e-5102-49d2-8170-c69a74daf4d9",
+      "c7090cd6-c925-47cb-b121-8a6cfb39dd40",
+      "6625e7b6-9216-407d-b0d3-8b25dfcde804",
+      "f5ff000c-ba09-4c8c-86d9-0f90f9d36b7e",
+      "52770c03-27d8-45c5-93d8-0d7c999cabda",
+      "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+      "9127a443-455e-42c8-bd32-2c9bf1163c60",
+      "6e63690e-72d9-4115-9e92-f8bf6da17121",
+      "3a8aedec-2519-4c77-9a95-5c02b446d459",
+      "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+      "fc0883cc-587e-4499-be9d-2082db8ecf6b",
+      "825bfffd-fdaa-48ec-8195-f9751ef86fc0",
+      "3329b503-f439-463a-a618-bf79edccadc4",
+      "85fdc7fc-0fc9-44e2-9345-0c2363cbc50e",
+      "6a1bf560-c241-4937-823b-1adf066c582c",
+      "b3b4d832-ae4a-4141-9717-54cd5d1dd9ba",
+      "aa39a2b1-6b72-430f-ba77-f71b635d6639",
+      "5abfe588-3349-413f-9f43-25b1235d484e",
+      "9e48da17-3a50-4283-b626-d39b6036f326",
+      "900ce350-49e8-4688-8775-0b0bc2176ac8",
+      "25f73f59-7226-4b81-b8da-a85605bf2c18",
+      "d3a8404e-1f18-4648-87ab-f924046ab7f2",
+      "e266030e-7803-41d7-a563-4d669f909d2e",
+      "a422f994-6124-455a-988c-225e6cb87205",
+      "5b3b1476-07bd-41ff-8852-2168006715da",
+      "5db407f3-3ea2-4e60-a432-75d084c0e6d4",
+      "5087605d-94e4-43bb-8856-1ba7a43a8938",
+      "151a1cf4-f6e8-4cd4-914b-833a0c69f569"
+    ],
+    "notes": [],
+    "noteLinks": []
+  },
+  "logicalElements": [
+    {
+      "name": "OpmLogicalObject",
+      "lid": "4ebde0fa-f36e-4e9d-b029-9c0b5ce929c4",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Home Cook (beneficiary & Agent)",
+      "isAutoFormat": true,
+      "description": "The only environmental object: the person who prepares and benefits from dinner.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 1,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "6012287f-6e47-4910-a2a1-09a92786dd62",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 511,
+          "yPos": 217,
+          "width": 245,
+          "height": 70,
+          "fill": "#fff8dc",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "050c034d-786a-4975-9dec-1dac31234037",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Tomatoes & Eggs",
+      "isAutoFormat": true,
+      "description": "Ingredients consumed while preparing the first dish.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "02c8e04e-5102-49d2-8170-c69a74daf4d9",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 118,
+          "yPos": 79,
+          "width": 195,
+          "height": 70,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "376f5a60-a990-4f59-8a57-b92ab6931bd9",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Wok",
+      "isAutoFormat": true,
+      "description": "Instrument used for stir-frying.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "c7090cd6-c925-47cb-b121-8a6cfb39dd40",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 379,
+          "yPos": 85,
+          "width": 135,
+          "height": 70,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "419f7898-6253-45c0-9a1e-d87672f8f07e",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Vegetables & Water",
+      "isAutoFormat": true,
+      "description": "Ingredients consumed while preparing the soup.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "6625e7b6-9216-407d-b0d3-8b25dfcde804",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 755,
+          "yPos": 55,
+          "width": 210,
+          "height": 70,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "d49883fd-dd6d-43ea-96a8-22adf9073161",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Soup Pot",
+      "isAutoFormat": true,
+      "description": "Instrument used for cooking soup.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "f5ff000c-ba09-4c8c-86d9-0f90f9d36b7e",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 1015,
+          "yPos": 55,
+          "width": 145,
+          "height": 70,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalProcess",
+      "lid": "d6aa10a7-7d33-4ae1-91d6-5425ee082d8e",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Tomato & Egg Stir-frying",
+      "isAutoFormat": true,
+      "description": "Prepares the tomato and egg dish.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": true,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "code": 0,
+      "insertedFunction": "None",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#3BC3FF",
+          "id": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 260,
+          "yPos": 285,
+          "width": 255,
+          "height": 110,
+          "fill": "#e9f7ff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "70%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [
+            {
+              "id": "3c0dad75-cdfb-4d14-91ff-d88428dedb17",
+              "group": "aaa",
+              "args": {
+                "x": 1,
+                "y": 0
+              },
+              "markup": [
+                {
+                  "tagName": "circle",
+                  "attributes": {
+                    "stroke": "transparent",
+                    "fill": "transparent",
+                    "r": 2,
+                    "width": 2,
+                    "height": 2,
+                    "magnet": "true"
+                  }
+                }
+              ]
+            }
+          ],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null,
+      "isWaitingProcess": false,
+      "waitingProcessLid": null,
+      "needUserInput": null
+    },
+    {
+      "name": "OpmLogicalProcess",
+      "lid": "58226d00-cfc9-425c-b1fe-07f0c18e2c68",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Vegetable Soup Cooking",
+      "isAutoFormat": true,
+      "description": "Prepares the vegetable soup.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": true,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "code": 0,
+      "insertedFunction": "None",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#3BC3FF",
+          "id": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 730,
+          "yPos": 285,
+          "width": 255,
+          "height": 110,
+          "fill": "#e9f7ff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "70%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null,
+      "isWaitingProcess": false,
+      "waitingProcessLid": null,
+      "needUserInput": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "370f4e15-ddd4-47b0-abfc-24fae41b6653",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Tomato & Egg Dish",
+      "isAutoFormat": true,
+      "description": "The first dish and its readiness states.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "9127a443-455e-42c8-bd32-2c9bf1163c60",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 263,
+          "yPos": 646,
+          "width": 252,
+          "height": 106,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.9,
+          "xAlign": "middle",
+          "yAlign": "bottom",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [
+            "6e63690e-72d9-4115-9e92-f8bf6da17121",
+            "3a8aedec-2519-4c77-9a95-5c02b446d459"
+          ],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalState",
+      "lid": "d2862e1d-6762-4689-ae61-fcaf405bf4ab",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "not ready",
+      "isAutoFormat": true,
+      "description": "",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "stateType": "none",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 300,
+          "textFontSize": 14,
+          "textFontFamily": "Arial, helvetica, sans-serif",
+          "textColor": "#000000",
+          "strokeWidth": null,
+          "strokeColor": "#808000",
+          "id": "6e63690e-72d9-4115-9e92-f8bf6da17121",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 275,
+          "yPos": 656,
+          "width": 108,
+          "height": 43,
+          "fill": "#FFFFFF",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": "9127a443-455e-42c8-bd32-2c9bf1163c60",
+          "ports": []
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null
+    },
+    {
+      "name": "OpmLogicalState",
+      "lid": "4119e009-1cc5-4b27-bb5a-4db134468275",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "ready",
+      "isAutoFormat": true,
+      "description": "",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "stateType": "none",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 300,
+          "textFontSize": 14,
+          "textFontFamily": "Arial, helvetica, sans-serif",
+          "textColor": "#000000",
+          "strokeWidth": null,
+          "strokeColor": "#808000",
+          "id": "3a8aedec-2519-4c77-9a95-5c02b446d459",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 395,
+          "yPos": 656,
+          "width": 108,
+          "height": 43,
+          "fill": "#FFFFFF",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": "9127a443-455e-42c8-bd32-2c9bf1163c60",
+          "ports": []
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "d480937c-3f34-45be-843b-70ab811f63b1",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Vegetable Soup",
+      "isAutoFormat": true,
+      "description": "The second dish and its readiness states.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 974,
+          "yPos": 503,
+          "width": 252,
+          "height": 106,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.9,
+          "xAlign": "middle",
+          "yAlign": "bottom",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [
+            "fc0883cc-587e-4499-be9d-2082db8ecf6b",
+            "825bfffd-fdaa-48ec-8195-f9751ef86fc0"
+          ],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalState",
+      "lid": "4cd2a642-3640-42ee-b698-65aceb9afefc",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "not ready",
+      "isAutoFormat": true,
+      "description": "",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "stateType": "none",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 300,
+          "textFontSize": 14,
+          "textFontFamily": "Arial, helvetica, sans-serif",
+          "textColor": "#000000",
+          "strokeWidth": null,
+          "strokeColor": "#808000",
+          "id": "fc0883cc-587e-4499-be9d-2082db8ecf6b",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 986,
+          "yPos": 513,
+          "width": 108,
+          "height": 43,
+          "fill": "#FFFFFF",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+          "ports": []
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null
+    },
+    {
+      "name": "OpmLogicalState",
+      "lid": "ef966ad4-5d04-4c09-a40f-2300dda1c949",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "ready",
+      "isAutoFormat": true,
+      "description": "",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "stateType": "none",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 300,
+          "textFontSize": 14,
+          "textFontFamily": "Arial, helvetica, sans-serif",
+          "textColor": "#000000",
+          "strokeWidth": null,
+          "strokeColor": "#808000",
+          "id": "825bfffd-fdaa-48ec-8195-f9751ef86fc0",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 1106,
+          "yPos": 513,
+          "width": 108,
+          "height": 43,
+          "fill": "#FFFFFF",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+          "ports": []
+        }
+      ],
+      "min": null,
+      "nominal": null,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "a7aee987-bc3a-4c0a-bea2-e6a7af5abfdf",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Two-dish Dinner (purpose)",
+      "isAutoFormat": true,
+      "description": "Purpose: provide the home cook with two ready dishes.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": false,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "3329b503-f439-463a-a618-bf79edccadc4",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 512,
+          "yPos": 410,
+          "width": 260,
+          "height": 75,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmLogicalObject",
+      "lid": "0bbe3b41-304e-41af-a2fa-6500e3b856e5",
+      "URLarray": [
+        {
+          "description": " ",
+          "iconType": "picture",
+          "url": "http://"
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "text": "Home Dinner Cooking System",
+      "isAutoFormat": true,
+      "description": "A system with two parallel dish-preparation processes.",
+      "orderedFundamentalTypes": [],
+      "protectedFromBeingRefinedBySubModel": null,
+      "essence": 0,
+      "affiliation": 0,
+      "shouldBeGreyed": false,
+      "isMainThing": true,
+      "simulationParams": {
+        "bernoulli": false,
+        "binomial": false,
+        "distribution": "uniform",
+        "exponential": false,
+        "geometric": false,
+        "normal": false,
+        "numerical": false,
+        "poisson": false,
+        "simulated": false,
+        "textualArray": [
+          {
+            "percent": "",
+            "text": ""
+          }
+        ],
+        "uniform": true
+      },
+      "equivalentFromStereotypeLID": null,
+      "satisfiedRequirementsSetParams": {
+        "isRequirementObject": false,
+        "isRequirementSetObject": false,
+        "logicalRequirementSetObjectLID": null,
+        "ownerLID": null,
+        "setObjectPos": null,
+        "requirements": null
+      },
+      "backgroundImageUrl": "",
+      "valueType": 0,
+      "value": "None",
+      "units": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": 600,
+          "textFontSize": 14,
+          "textFontFamily": "Arial",
+          "textColor": "#000002",
+          "strokeWidth": 2,
+          "strokeColor": "#70E483",
+          "id": "85fdc7fc-0fc9-44e2-9345-0c2363cbc50e",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "xPos": 600,
+          "yPos": 614,
+          "width": 255,
+          "height": 75,
+          "fill": "#fdffff",
+          "refX": 0.5,
+          "refY": 0.5,
+          "xAlign": "middle",
+          "yAlign": "middle",
+          "textAnchor": "middle",
+          "textWidth": "80%",
+          "textHeight": "80%",
+          "isManualTextPos": null,
+          "descriptionStatus": " ",
+          "fatherObjectId": null,
+          "ports": [],
+          "children": [],
+          "semiFolded": [],
+          "showBackgroundImage": null,
+          "foldedUnderThing": {
+            "isFolded": false,
+            "triangleType": null,
+            "realTarget": null,
+            "targetPos": {
+              "xPos": null,
+              "yPos": null
+            }
+          },
+          "statesArrangement": 0,
+          "refineableId": null,
+          "refineeInzoomingId": null,
+          "refineeUnfoldingId": null,
+          "digitalTwin": null,
+          "predigitalTwin": null,
+          "originalObj": null,
+          "preoriginalObj": null,
+          "digitalTwinConnected": null,
+          "lastStatesOrder": []
+        }
+      ],
+      "statesWithoutVisual": [],
+      "alias": null,
+      "validation": {},
+      "valuedObjectForId": null
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "78f6386d-7e8a-4eb5-bd54-0bb7fceffdc5",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 0,
+      "linkType": 0,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "6a1bf560-c241-4937-823b-1adf066c582c",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "6012287f-6e47-4910-a2a1-09a92786dd62",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "23983bc4-75a1-436e-ab03-0195f5bc074d",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 2,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "b3b4d832-ae4a-4141-9717-54cd5d1dd9ba",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "02c8e04e-5102-49d2-8170-c69a74daf4d9",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "19341961-9dcc-4581-b312-d9825d99b5e4",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 1,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "aa39a2b1-6b72-430f-ba77-f71b635d6639",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "c7090cd6-c925-47cb-b121-8a6cfb39dd40",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "8213319e-328f-43af-b97f-62dc4c3e728c",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 2,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "5abfe588-3349-413f-9f43-25b1235d484e",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "6625e7b6-9216-407d-b0d3-8b25dfcde804",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "bc940b53-2e49-4405-8322-507fda22f578",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 1,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "9e48da17-3a50-4283-b626-d39b6036f326",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "f5ff000c-ba09-4c8c-86d9-0f90f9d36b7e",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "47e54d8d-9800-4510-b86f-3ebf8cce156b",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 2,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "900ce350-49e8-4688-8775-0b0bc2176ac8",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "6e63690e-72d9-4115-9e92-f8bf6da17121",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "2b54e8a2-9a69-405b-a09a-f9c9f8344711",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 3,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "25f73f59-7226-4b81-b8da-a85605bf2c18",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "3a8aedec-2519-4c77-9a95-5c02b446d459",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "785fa03e-c918-40c7-887c-3e227778ee77",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 2,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "d3a8404e-1f18-4648-87ab-f924046ab7f2",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "fc0883cc-587e-4499-be9d-2082db8ecf6b",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "f328143f-58fb-49dc-b2af-92311e7babb3",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 3,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": false,
+      "event": false,
+      "negation": false,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "e266030e-7803-41d7-a563-4d669f909d2e",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "825bfffd-fdaa-48ec-8195-f9751ef86fc0",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmFundamentalRelation",
+      "lid": "73aea27f-0bf3-4b88-ab7c-2b192160a16f",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 12,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": "normal",
+          "textFontSize": "12",
+          "textFontFamily": "ariel",
+          "textColor": "black",
+          "strokeWidth": "2",
+          "strokeColor": "#586D8C",
+          "id": "a422f994-6124-455a-988c-225e6cb87205",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "85fdc7fc-0fc9-44e2-9345-0c2363cbc50e",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": [],
+          "visible": null,
+          "showRequirementsLabel": true,
+          "targetMultiplicity": null,
+          "symbolPos": [
+            382.5,
+            551.25
+          ],
+          "UpperConnectionVertices": null,
+          "upperLinkAnchorPos": null,
+          "targetAnchorPos": null
+        }
+      ]
+    },
+    {
+      "name": "OpmFundamentalRelation",
+      "lid": "14b8c64a-0aee-43aa-95fa-4f5018817c36",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 12,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": "normal",
+          "textFontSize": "12",
+          "textFontFamily": "ariel",
+          "textColor": "black",
+          "strokeWidth": "2",
+          "strokeColor": "#586D8C",
+          "id": "5b3b1476-07bd-41ff-8852-2168006715da",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "85fdc7fc-0fc9-44e2-9345-0c2363cbc50e",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": [],
+          "visible": null,
+          "showRequirementsLabel": true,
+          "targetMultiplicity": null,
+          "symbolPos": [
+            382.5,
+            551.25
+          ],
+          "UpperConnectionVertices": null,
+          "upperLinkAnchorPos": null,
+          "targetAnchorPos": null
+        }
+      ]
+    },
+    {
+      "name": "OpmProceduralRelation",
+      "lid": "04a37379-af15-4c65-a95a-b146ed4adda5",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 0,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "condition": null,
+      "event": null,
+      "negation": null,
+      "path": null,
+      "visualElementsParams": [
+        {
+          "textFontWeight": null,
+          "textFontSize": null,
+          "textFontFamily": null,
+          "textColor": null,
+          "strokeWidth": null,
+          "strokeColor": null,
+          "id": "5db407f3-3ea2-4e60-a432-75d084c0e6d4",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "6012287f-6e47-4910-a2a1-09a92786dd62",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": [],
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "52770c03-27d8-45c5-93d8-0d7c999cabda",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": [],
+          "tag": null,
+          "labels": null,
+          "visible": null,
+          "showRequirementsLabel": true,
+          "path": null,
+          "Probability": null,
+          "rate": null,
+          "rateUnits": null,
+          "sourceMultiplicity": null,
+          "targetMultiplicity": null,
+          "timeMin": null,
+          "timeMax": null,
+          "timeMinVal": null,
+          "timeMaxVal": null,
+          "center": null,
+          "selfInvocationPeakPoint": null
+        }
+      ],
+      "min": null,
+      "nominal": 1,
+      "max": null,
+      "units": "s",
+      "timeDurationStatus": 2
+    },
+    {
+      "name": "OpmFundamentalRelation",
+      "lid": "8f27cbf4-c1e9-45bc-8a49-95202e6906cf",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 11,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": "normal",
+          "textFontSize": "12",
+          "textFontFamily": "ariel",
+          "textColor": "black",
+          "strokeWidth": "2",
+          "strokeColor": "#586D8C",
+          "id": "5087605d-94e4-43bb-8856-1ba7a43a8938",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "3329b503-f439-463a-a618-bf79edccadc4",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "9127a443-455e-42c8-bd32-2c9bf1163c60",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": [],
+          "visible": null,
+          "showRequirementsLabel": true,
+          "targetMultiplicity": null,
+          "symbolPos": null,
+          "UpperConnectionVertices": null,
+          "upperLinkAnchorPos": null,
+          "targetAnchorPos": null
+        }
+      ]
+    },
+    {
+      "name": "OpmFundamentalRelation",
+      "lid": "db2f1fda-253c-4fa1-9627-c1d0ca5c7a5d",
+      "URLarray": [
+        {
+          "iconType": "picture",
+          "url": "http://",
+          "description": " "
+        }
+      ],
+      "belongsToFatherModelId": null,
+      "linkConnectionType": 1,
+      "linkType": 11,
+      "sourceLogicalConnection": null,
+      "targetLogicalConnection": null,
+      "linkRequirements": "",
+      "visualElementsParams": [
+        {
+          "textFontWeight": "normal",
+          "textFontSize": "12",
+          "textFontFamily": "ariel",
+          "textColor": "black",
+          "strokeWidth": "2",
+          "strokeColor": "#586D8C",
+          "id": "151a1cf4-f6e8-4cd4-914b-833a0c69f569",
+          "belongsToSubModel": null,
+          "protectedFromBeingChangedBySubModel": null,
+          "belongsToFatherModelId": null,
+          "sourceVisualElement": "3329b503-f439-463a-a618-bf79edccadc4",
+          "sourceVisualElementPort": null,
+          "sourceConnectedLinks": null,
+          "targetVisualElements": [
+            {
+              "targetVisualElement": "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+              "vertices": null
+            }
+          ],
+          "targetVisualElementPort": null,
+          "targetConnectedLinks": null,
+          "tag": null,
+          "labels": [],
+          "visible": null,
+          "showRequirementsLabel": true,
+          "targetMultiplicity": null,
+          "symbolPos": null,
+          "UpperConnectionVertices": null,
+          "upperLinkAnchorPos": null,
+          "targetAnchorPos": null
+        }
+      ]
+    }
+  ],
+  "opds": [
+    {
+      "shape": null,
+      "stereotypeOpd": false,
+      "requirementsOpd": null,
+      "isHidden": false,
+      "isFlatteningOpd": false,
+      "isRangesOpd": false,
+      "isViewOpd": false,
+      "visualElements": [
+        "6012287f-6e47-4910-a2a1-09a92786dd62",
+        "02c8e04e-5102-49d2-8170-c69a74daf4d9",
+        "c7090cd6-c925-47cb-b121-8a6cfb39dd40",
+        "6625e7b6-9216-407d-b0d3-8b25dfcde804",
+        "f5ff000c-ba09-4c8c-86d9-0f90f9d36b7e",
+        "52770c03-27d8-45c5-93d8-0d7c999cabda",
+        "b66ebf5d-22e7-4382-b1c8-a53838f00de4",
+        "9127a443-455e-42c8-bd32-2c9bf1163c60",
+        "6e63690e-72d9-4115-9e92-f8bf6da17121",
+        "3a8aedec-2519-4c77-9a95-5c02b446d459",
+        "b266c486-e50b-4be7-9f77-8c6bbfb32187",
+        "fc0883cc-587e-4499-be9d-2082db8ecf6b",
+        "825bfffd-fdaa-48ec-8195-f9751ef86fc0",
+        "3329b503-f439-463a-a618-bf79edccadc4",
+        "85fdc7fc-0fc9-44e2-9345-0c2363cbc50e",
+        "6a1bf560-c241-4937-823b-1adf066c582c",
+        "b3b4d832-ae4a-4141-9717-54cd5d1dd9ba",
+        "aa39a2b1-6b72-430f-ba77-f71b635d6639",
+        "5abfe588-3349-413f-9f43-25b1235d484e",
+        "9e48da17-3a50-4283-b626-d39b6036f326",
+        "900ce350-49e8-4688-8775-0b0bc2176ac8",
+        "25f73f59-7226-4b81-b8da-a85605bf2c18",
+        "d3a8404e-1f18-4648-87ab-f924046ab7f2",
+        "e266030e-7803-41d7-a563-4d669f909d2e",
+        "a422f994-6124-455a-988c-225e6cb87205",
+        "5b3b1476-07bd-41ff-8852-2168006715da",
+        "5db407f3-3ea2-4e60-a432-75d084c0e6d4",
+        "5087605d-94e4-43bb-8856-1ba7a43a8938",
+        "151a1cf4-f6e8-4cd4-914b-833a0c69f569"
+      ],
+      "children": [],
+      "notes": [],
+      "noteLinks": [],
+      "name": "SD",
+      "stencil": true,
+      "id": "SD",
+      "parendId": "SD",
+      "permissions": null,
+      "requirementViewOf": null,
+      "sharedOpdWithSubModelId": null,
+      "belongsToSubModel": null,
+      "subModelEditDate": null
+    }
+  ],
+  "stereotypes": [],
+  "autoOpdTreeSort": null,
+  "importedTemplates": null,
+  "relatedRelations": [],
+  "fatherModelName": null,
+  "hasUnsavedWork": true
+}
