@@ -6,6 +6,14 @@
 
 安装后，OPCloud 页面右下角会显示“模型导入 / 导出”面板。模型文件只在本地浏览器中处理，不会上传到其他服务器。
 
+## 在线一键安装
+
+先安装 [Tampermonkey](https://www.tampermonkey.net/) 或 [Violentmonkey](https://violentmonkey.github.io/)，然后点击：
+
+### [➡️ 一键安装 OPCloud Bridge](https://raw.githubusercontent.com/Du0yu/OPCloud-Bridge/main/opcloud-model-io.user.js)
+
+用户脚本管理器会自动打开安装确认页。脚本内置更新地址，发布更高版本后可由用户脚本管理器自动检查更新。
+
 ## 功能
 
 - 将当前完整模型导出为 `.opcl` 文件
@@ -22,7 +30,7 @@
 ### 方法一：从 Git 托管平台安装
 
 1. 在浏览器中安装 [Tampermonkey](https://www.tampermonkey.net/) 或 [Violentmonkey](https://violentmonkey.github.io/)。
-2. 在 GitHub、GitLab 等平台打开 `opcloud-model-io.user.js` 的 Raw 页面。
+2. 点击[一键安装链接](https://raw.githubusercontent.com/Du0yu/OPCloud-Bridge/main/opcloud-model-io.user.js)。
 3. 用户脚本管理器会弹出安装页面，选择“安装”。
 4. 打开或刷新 [OPCloud Sandbox](https://opcloud-sandbox.web.app/)。
 

@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.2.0
+// @version      1.2.1
 // @description  为 OPCloud Sandbox 增加本地 JSON/OPCL 导入与导出按钮
 // @author       Du0yu
 // @match        https://opcloud-sandbox.web.app/*
+// @downloadURL  https://raw.githubusercontent.com/Du0yu/OPCloud-Bridge/main/opcloud-model-io.user.js
+// @updateURL    https://raw.githubusercontent.com/Du0yu/OPCloud-Bridge/main/opcloud-model-io.user.js
 // @run-at       document-idle
 // @grant        unsafeWindow
 // ==/UserScript==
