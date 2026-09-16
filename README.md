@@ -10,6 +10,8 @@
 
 - 将当前完整模型导出为 `.opcl` 文件
 - 导入 `.opcl` 或兼容的 `.json` 文件
+- 将当前 OPD 导出为 2× 分辨率 JPEG
+- 将当前 OPD 导出为可缩放的 SVG
 - 导入后自动重建 OPD、导航树和 OPL
 - 覆盖已有模型前进行确认
 - 自动适配 OPCloud Webpack 模块编号变化
@@ -43,6 +45,11 @@
 1. 点击页面右下角的“导入”。
 2. 选择 `.opcl` 或兼容的 `.json` 文件。
 3. 如果当前画布已有内容，确认是否替换。
+
+### 导出图像
+
+- 点击“导出 JPEG”下载当前 OPD 的 2× 分辨率位图。
+- 点击“导出 SVG”下载当前 OPD 的矢量图；包含背景图片时优先使用 SVG。
 
 可以先用 [`examples/Two-Dish-Dinner-Corrected.opcl`](./examples/Two-Dish-Dinner-Corrected.opcl) 测试导入。
 

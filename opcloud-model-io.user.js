@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.1.1
+// @version      1.2.0
 // @description  为 OPCloud Sandbox 增加本地 JSON/OPCL 导入与导出按钮
 // @author       Du0yu
 // @match        https://opcloud-sandbox.web.app/*
@@ -40,9 +40,7 @@
       .slice(0, 120) || 'OPCloud-Model';
   }
 
-  function downloadJson(data, fileName) {
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+  function downloadBlob(blob, fileName) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -52,6 +50,21 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function downloadJson(data, fileName) {
+    const json = JSON.stringify(data, null, 2);
+    downloadBlob(new Blob([json], { type: 'application/json;charset=utf-8' }), fileName);
+  }
+
+  function jpegDataUrlToBlob(imageData) {
+    const encoded = imageData.replace(/^data:image\/(?:png|jpeg|jpg);base64,/, '');
+    const binary = atob(encoded);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return new Blob([bytes], { type: 'image/jpeg' });
   }
 
   function getWebpackRequire() {
@@ -132,6 +145,68 @@
     }
   }
 
+  function currentImageName() {
+    const model = currentModel();
+    const modelName = initService.modelService?.displayName || model.name || 'OPCloud-Model';
+    const opdName = model.currentOpd?.name;
+    return safeFileName(opdName ? `${modelName}-${opdName}` : modelName);
+  }
+
+  function exportJpeg() {
+    try {
+      const paper = initService?.paper;
+      if (!paper || typeof paper.toJPEG !== 'function') {
+        throw new Error('当前 OPCloud 版本不支持 JPEG 导出');
+      }
+      const name = currentImageName();
+      setStatus('正在生成 JPEG…', 'info', 0);
+      paper.toJPEG((imageData) => {
+        try {
+          downloadBlob(jpegDataUrlToBlob(imageData), `${name}.jpeg`);
+          setStatus(`已导出：${name}.jpeg`, 'ok');
+        } catch (error) {
+          console.error('[OPCloud I/O] JPEG download failed:', error);
+          setStatus(`JPEG 导出失败：${error.message}`, 'error', 7000);
+        }
+      }, {
+        padding: 40,
+        useComputedStyles: false,
+        size: '2x',
+        quality: 1.0,
+      });
+    } catch (error) {
+      console.error('[OPCloud I/O] JPEG export failed:', error);
+      setStatus(`JPEG 导出失败：${error.message}`, 'error', 7000);
+    }
+  }
+
+  function exportSvg() {
+    try {
+      const paper = initService?.paper;
+      if (!paper || typeof paper.toSVG !== 'function') {
+        throw new Error('当前 OPCloud 版本不支持 SVG 导出');
+      }
+      const name = currentImageName();
+      setStatus('正在生成 SVG…', 'info', 0);
+      paper.toSVG((imageData) => {
+        try {
+          const blob = new Blob([imageData], { type: 'image/svg+xml;charset=utf-8' });
+          downloadBlob(blob, `${name}.svg`);
+          setStatus(`已导出：${name}.svg`, 'ok');
+        } catch (error) {
+          console.error('[OPCloud I/O] SVG download failed:', error);
+          setStatus(`SVG 导出失败：${error.message}`, 'error', 7000);
+        }
+      }, {
+        useComputedStyles: false,
+        convertImagesToDataUris: true,
+      });
+    } catch (error) {
+      console.error('[OPCloud I/O] SVG export failed:', error);
+      setStatus(`SVG 导出失败：${error.message}`, 'error', 7000);
+    }
+  }
+
   function validateModel(json) {
     if (!json || typeof json !== 'object' || Array.isArray(json)) {
       throw new Error('文件内容不是 JSON 对象');
@@ -187,16 +262,18 @@
     style.textContent = `
       #${PANEL_ID} {
         position: fixed; right: 14px; top: auto; bottom: 14px; z-index: 2147483646;
-        width: 218px; padding: 10px; box-sizing: border-box;
+        width: 230px; padding: 10px; box-sizing: border-box;
         border: 1px solid rgba(26,55,99,.24); border-radius: 9px;
         background: rgba(255,255,255,.96); color: #1a3763;
         box-shadow: 0 5px 20px rgba(26,55,99,.18);
         font: 13px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
       #${PANEL_ID} .opcloud-io-title { font-weight: 700; margin-bottom: 8px; }
-      #${PANEL_ID} .opcloud-io-actions { display: flex; gap: 7px; }
+      #${PANEL_ID} .opcloud-io-actions {
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px;
+      }
       #${PANEL_ID} button {
-        flex: 1; padding: 7px 9px; border: 0; border-radius: 6px;
+        padding: 7px 9px; border: 0; border-radius: 6px;
         background: #497284; color: white; cursor: pointer; font: inherit;
       }
       #${PANEL_ID} button:hover { background: #365d70; }
@@ -212,8 +289,10 @@
     panel.innerHTML = `
       <div class="opcloud-io-title">模型导入 / 导出</div>
       <div class="opcloud-io-actions">
-        <button type="button" data-action="export" disabled>导出</button>
-        <button type="button" data-action="import" disabled>导入</button>
+        <button type="button" data-action="export" disabled>导出模型</button>
+        <button type="button" data-action="import" disabled>导入模型</button>
+        <button type="button" data-action="jpeg" title="导出当前 OPD，2× 分辨率" disabled>导出 JPEG</button>
+        <button type="button" data-action="svg" title="导出当前 OPD 矢量图" disabled>导出 SVG</button>
       </div>
       <div id="${PANEL_ID}-status" data-kind="info">正在连接 OPCloud…</div>
     `;
@@ -231,6 +310,8 @@
 
     panel.querySelector('[data-action="export"]').addEventListener('click', exportModel);
     panel.querySelector('[data-action="import"]').addEventListener('click', () => importInput.click());
+    panel.querySelector('[data-action="jpeg"]').addEventListener('click', exportJpeg);
+    panel.querySelector('[data-action="svg"]').addEventListener('click', exportSvg);
   }
 
   createPanel();
