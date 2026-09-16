@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.1.0
+// @version      1.1.1
 // @description  为 OPCloud Sandbox 增加本地 JSON/OPCL 导入与导出按钮
 // @author       Du0yu
 // @match        https://opcloud-sandbox.web.app/*
@@ -186,7 +186,7 @@
     const style = document.createElement('style');
     style.textContent = `
       #${PANEL_ID} {
-        position: fixed; right: 14px; bottom: 14px; z-index: 2147483646;
+        position: fixed; right: 14px; top: auto; bottom: 14px; z-index: 2147483646;
         width: 218px; padding: 10px; box-sizing: border-box;
         border: 1px solid rgba(26,55,99,.24); border-radius: 9px;
         background: rgba(255,255,255,.96); color: #1a3763;
