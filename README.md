@@ -66,6 +66,10 @@ npm test
 
 由于这些是站点内部接口，如果 OPCloud 将来进行较大的前端重构，脚本可能需要同步更新。
 
+## Agent 使用说明
+
+如果使用编码 Agent 生成或修改 JSON/`.opcl`，请让 Agent 先阅读 [`AGENTS.md`](./AGENTS.md)。它要求 Agent 交付可直接导入的完整文件，并定义了 OPCloud JSON 引用规则、OPM 连线枚举、状态转换方式、OPL 对应句式和提交前校验流程。
+
 ## 隐私
 
 - 不包含统计或遥测代码。

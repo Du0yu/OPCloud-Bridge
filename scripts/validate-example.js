@@ -12,8 +12,15 @@ const visualIds = model.logicalElements.flatMap((element) =>
   (element.visualElementsParams || []).map((visual) => visual.id)
 );
 const idSet = new Set(visualIds);
+const logicalIds = model.logicalElements.map((element) => element.lid);
+const logicalIdSet = new Set(logicalIds);
 
 if (idSet.size !== visualIds.length) throw new Error('Duplicate visual IDs found.');
+if (logicalIdSet.size !== logicalIds.length) throw new Error('Duplicate logical IDs found.');
+if (logicalIds.some((id) => !id)) throw new Error('Logical element is missing a lid.');
+
+const currentOpd = model.opds.find((opd) => opd.id === model.currentOpd?.id);
+if (!currentOpd) throw new Error('currentOpd does not reference an existing OPD.');
 
 for (const opd of model.opds) {
   for (const id of opd.visualElements || []) {
@@ -26,6 +33,14 @@ for (const element of model.logicalElements) {
     for (const visual of element.visualElementsParams || []) {
       if (!idSet.has(visual.fatherObjectId)) {
         throw new Error(`State references missing parent object: ${visual.fatherObjectId}`);
+      }
+      const parent = model.logicalElements.find((candidate) =>
+        candidate.name === 'OpmLogicalObject' &&
+        (candidate.visualElementsParams || []).some((item) => item.id === visual.fatherObjectId)
+      );
+      const parentVisual = parent?.visualElementsParams.find((item) => item.id === visual.fatherObjectId);
+      if (!parentVisual?.children?.includes(visual.id)) {
+        throw new Error(`Parent object does not list state visual: ${visual.id}`);
       }
     }
   }
