@@ -70,9 +70,11 @@ npm start
 使用 Codex CLI 可以直接登记本地源码版本：
 
 ```powershell
-codex mcp add opcloud -- node "C:\Users\Duoyu\Documents\Code\OPCloud-Bridge\mcp-server\server.js"
+codex mcp add opcloud -- node "C:\path\to\OPCloud-Bridge\mcp-server\server.js"
 codex mcp get opcloud
 ```
+
+请将 `C:\path\to\OPCloud-Bridge` 替换为你克隆本仓库后的实际绝对路径。
 
 登记后请新建一个 Codex 会话。MCP Server 会由 Codex 自动启动，不需要同时手动运行 `npm start`。随后打开或刷新 OPCloud；油猴面板显示“`MCP：Agent 已连接`”即表示浏览器桥已接通。
 
