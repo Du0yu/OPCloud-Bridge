@@ -192,3 +192,24 @@ Do not hand-edit generated OPL to conceal an incorrect diagram. Correct the OPD/
 9. Review the generated OPL sentences against the intended semantics.
 
 Do not claim a model is validated if only JSON parsing was performed. Report separately whether schema references, OPCloud import, rendering, and OPL semantics were verified.
+
+## MCP Workflow
+
+When the OPCloud Bridge MCP tools are available, use them in this order:
+
+1. Call `opcloud_status` and confirm that `connected` and `opcloud.ready` are true.
+2. Call `opcloud_get_model` before changing a non-empty canvas so the existing model can be preserved.
+3. Build a complete model using the schema and semantic rules in this file.
+4. Call `opcloud_validate_model` with the proposed model and correct every reported error.
+5. Call `opcloud_import_model` with `replaceExisting: false` first. Only set `replaceExisting: true` when replacing the current model is intentional and the existing model has already been preserved or is disposable.
+6. Call `opcloud_get_opl` after import and review the generated sentences against the intended OPM semantics.
+7. Call `opcloud_review_diagram` after every import or material model change. Review both the returned OPL and the actual JPEG rendering for overlaps, clipped labels, misplaced states, crossing links, missing elements, and semantic inconsistencies.
+8. Use `opcloud_export_image` separately when a standalone JPEG or SVG artifact is needed.
+
+The normal closed-loop sequence is:
+
+```text
+get current model → generate/edit → validate → import → review diagram + OPL → correct → re-import → review again
+```
+
+Never treat a successful WebSocket response as semantic validation. Import success, reference validation, visual rendering, and OPL review remain separate checks.

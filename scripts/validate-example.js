@@ -1,7 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
 
-const modelPath = path.join(__dirname, '..', 'examples', 'Two-Dish-Dinner-Corrected.opcl');
+const modelPath = new URL('../examples/Two-Dish-Dinner-Corrected.opcl', import.meta.url);
 const model = JSON.parse(fs.readFileSync(modelPath, 'utf8'));
 
 if (!Array.isArray(model.logicalElements) || !Array.isArray(model.opds) || model.opds.length === 0) {
