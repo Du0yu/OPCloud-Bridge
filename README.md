@@ -1,5 +1,7 @@
 # OPCloud Bridge
 
+[简体中文](./README.md) | [English](./README.en.md)
+
 为 [OPCloud Sandbox](https://opcloud-sandbox.web.app/) 增加本地模型导入、导出功能，并允许 Codex、Claude 等 Agent 通过 MCP 操作当前浏览器中的模型。
 
 安装后，OPCloud 页面右下角会显示“模型导入 / 导出”面板。模型文件只在本地浏览器中处理，不会上传到其他服务器。
@@ -26,6 +28,7 @@
 - 附带一个可直接导入的两菜晚餐示例模型
 - 提供本地 MCP Server，支持 Agent 读取、导入、校验模型以及读取 OPL、导出图像
 - 油猴脚本自动连接本机 MCP 桥，无需修改 OPCloud 网站
+- 插件界面支持中文和英文：首次自动跟随浏览器语言，也可点击面板中的 `EN / 中文` 手动切换
 
 ## Agent / MCP 模式
 
@@ -87,7 +90,7 @@ codex mcp get opcloud
 3. `opcloud_get_opl`：应能读取当前模型生成的 OPL；
 4. `opcloud_review_diagram`：应同时返回模型摘要、OPL 和 MIME 类型为 `image/jpeg` 的实际画布图像。
 
-项目已使用空白 OPCloud 模型完成过一次端到端实测：油猴脚本 `1.3.0` 成功连接本机 WebSocket，Agent 读取到 `Model (Not Saved)`、空 OPL，以及与空模型一致的白色 JPEG 画布。
+项目已使用空白 OPCloud 模型完成过一次端到端实测：油猴脚本成功连接本机 WebSocket，Agent 读取到 `Model (Not Saved)`、空 OPL，以及与空模型一致的白色 JPEG 画布。
 
 ### MCP 工具
 
@@ -127,6 +130,10 @@ codex mcp get opcloud
 3. 保存并刷新 OPCloud 页面。
 
 ## 使用
+
+### 切换界面语言
+
+插件首次运行时会根据浏览器首选语言显示中文或英文。点击面板标题右侧的 `EN` 或 `中文` 可手动切换；选择会保存在当前站点的浏览器本地存储中。
 
 ### 导出模型
 
@@ -184,9 +191,3 @@ npm test
 ## License
 
 [MIT](./LICENSE)
-
----
-
-## English quick start
-
-Install Tampermonkey or Violentmonkey, install `opcloud-model-io.user.js`, and refresh OPCloud Sandbox. The bottom-right panel supports local import/export. To let an Agent operate OPCloud, run `npx -y github:Du0yu/OPCloud-Bridge` as an MCP stdio server; the userscript connects to its localhost WebSocket automatically.
