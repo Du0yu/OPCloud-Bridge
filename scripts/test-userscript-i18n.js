@@ -21,4 +21,8 @@ for (const key of usedKeys) {
   assert.ok(key in translations.zh, `Missing Chinese translation key: ${key}`);
 }
 
+assert.match(source, /data-action="opl"/);
+assert.match(source, /addEventListener\('click', saveOpl\)/);
+assert.match(source, /\.opl\.txt/);
+
 console.log(`Validated ${englishKeys.length} userscript translation keys in English and Chinese.`);

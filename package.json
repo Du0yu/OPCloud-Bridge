@@ -1,6 +1,6 @@
 {
   "name": "opcloud-bridge-mcp",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Userscript and local MCP bridge for OPCloud Sandbox",
   "type": "module",
   "bin": {

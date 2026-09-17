@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.4.0
+// @version      1.5.0
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.4.0';
+  const USERSCRIPT_VERSION = '1.5.0';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -33,8 +33,10 @@
       importModel: 'Import model',
       exportJpeg: 'Export JPEG',
       exportSvg: 'Export SVG',
+      saveOpl: 'Save OPL',
       exportJpegTitle: 'Export the current OPD at 2× resolution',
       exportSvgTitle: 'Export the current OPD as a vector image',
+      saveOplTitle: 'Save the OPL generated for the current model',
       connecting: 'Connecting to OPCloud…',
       connected: 'Connected to OPCloud',
       connectionFailed: 'Connection failed. Refresh the page to retry.',
@@ -65,6 +67,8 @@
       importCancelled: 'Import cancelled',
       imported: 'Imported: {name}',
       importFailed: 'Import failed: {message}',
+      oplSaved: 'Saved: {name}',
+      oplSaveFailed: 'OPL save failed: {message}',
     },
     zh: {
       title: '模型导入 / 导出',
@@ -74,8 +78,10 @@
       importModel: '导入模型',
       exportJpeg: '导出 JPEG',
       exportSvg: '导出 SVG',
+      saveOpl: '保存 OPL',
       exportJpegTitle: '导出当前 OPD，2× 分辨率',
       exportSvgTitle: '导出当前 OPD 矢量图',
+      saveOplTitle: '将当前模型生成的 OPL 保存到本地',
       connecting: '正在连接 OPCloud…',
       connected: '已连接 OPCloud',
       connectionFailed: '连接失败，请刷新页面重试',
@@ -106,6 +112,8 @@
       importCancelled: '已取消导入',
       imported: '已导入：{name}',
       importFailed: '导入失败：{message}',
+      oplSaved: '已保存：{name}',
+      oplSaveFailed: 'OPL 保存失败：{message}',
     },
   };
 
@@ -438,6 +446,21 @@
     throw new Error(t('oplUnsupported'));
   }
 
+  function saveOpl() {
+    try {
+      const opl = generatedOpl();
+      const text = Array.isArray(opl) ? opl.join('\n') : String(opl ?? '');
+      const fileName = `${currentImageName()}.opl.txt`;
+      downloadBlob(new Blob([text, text.endsWith('\n') || text.length === 0 ? '' : '\n'], {
+        type: 'text/plain;charset=utf-8',
+      }), fileName);
+      setStatus(t('oplSaved', { name: fileName }), 'ok');
+    } catch (error) {
+      console.error('[OPCloud I/O] OPL save failed:', error);
+      setStatus(t('oplSaveFailed', { message: error.message }), 'error', 7000);
+    }
+  }
+
   async function handleBridgeAction(action, payload = {}) {
     if (action === 'status') {
       const model = initService ? currentModel() : null;
@@ -593,6 +616,7 @@
       import: ['importModel', null],
       jpeg: ['exportJpeg', 'exportJpegTitle'],
       svg: ['exportSvg', 'exportSvgTitle'],
+      opl: ['saveOpl', 'saveOplTitle'],
     };
     Object.entries(labels).forEach(([action, [labelKey, titleKey]]) => {
       const button = panel.querySelector(`[data-action="${action}"]`);
@@ -645,6 +669,7 @@
       #${PANEL_ID} .opcloud-io-actions {
         display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px;
       }
+      #${PANEL_ID} [data-action="opl"] { grid-column: 1 / -1; }
       #${PANEL_ID} button {
         padding: 7px 9px; border: 0; border-radius: 6px;
         background: #497284; color: white; cursor: pointer; font: inherit;
@@ -672,6 +697,7 @@
         <button type="button" data-action="import" disabled>${t('importModel')}</button>
         <button type="button" data-action="jpeg" title="${t('exportJpegTitle')}" disabled>${t('exportJpeg')}</button>
         <button type="button" data-action="svg" title="${t('exportSvgTitle')}" disabled>${t('exportSvg')}</button>
+        <button type="button" data-action="opl" title="${t('saveOplTitle')}" disabled>${t('saveOpl')}</button>
       </div>
       <div id="${PANEL_ID}-status" data-kind="info">${t('connecting')}</div>
       <div id="${PANEL_ID}-bridge-status" data-kind="info">${t('bridgeWaiting')}</div>
@@ -692,6 +718,7 @@
     panel.querySelector('[data-action="import"]').addEventListener('click', () => importInput.click());
     panel.querySelector('[data-action="jpeg"]').addEventListener('click', exportJpeg);
     panel.querySelector('[data-action="svg"]').addEventListener('click', exportSvg);
+    panel.querySelector('[data-action="opl"]').addEventListener('click', saveOpl);
     panel.querySelector('[data-action="language"]').addEventListener('click', toggleLanguage);
     refreshPanelLanguage();
   }

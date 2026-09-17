@@ -22,6 +22,7 @@
 - 导入 `.opcl` 或兼容的 `.json` 文件
 - 将当前 OPD 导出为 2× 分辨率 JPEG
 - 将当前 OPD 导出为可缩放的 SVG
+- 将当前模型生成的 OPL 保存为本地 UTF-8 文本文件
 - 导入后自动重建 OPD、导航树和 OPL
 - 覆盖已有模型前进行确认
 - 自动适配 OPCloud Webpack 模块编号变化
@@ -151,6 +152,10 @@ codex mcp get opcloud
 
 - 点击“导出 JPEG”下载当前 OPD 的 2× 分辨率位图。
 - 点击“导出 SVG”下载当前 OPD 的矢量图；包含背景图片时优先使用 SVG。
+
+### 保存 OPL
+
+点击“保存 OPL”会读取 OPCloud 为当前模型生成的 OPL，并下载为 UTF-8 编码的 `.opl.txt` 文件。文件名包含模型名称和当前 OPD 名称。
 
 可以先用 [`examples/Two-Dish-Dinner-Corrected.opcl`](./examples/Two-Dish-Dinner-Corrected.opcl) 测试导入。
 
