@@ -2,6 +2,15 @@
 
 These instructions apply to the entire repository. Follow them whenever an agent creates, edits, reviews, or validates an OPCloud `.opcl` or compatible `.json` model.
 
+## Authoritative OPM Reference
+
+- Use **ISO 19450:2024, _Automation systems and integration — Object-Process Methodology_** as the authoritative reference for OPM concepts, semantics, syntax, terminology, and modelling rules.
+- Prefer ISO 19450:2024 terminology when project wording or implementation details are ambiguous.
+- Do not claim that this project is ISO-compliant or ISO-certified unless compliance has been explicitly verified.
+- `ISO/PAS 19450:2015` is withdrawn and has been replaced by `ISO 19450:2024`; use the 2015 edition only when discussing historical behaviour or compatibility.
+
+Official reference: https://www.iso.org/standard/84612.html
+
 ## Objective
 
 Produce models that:
