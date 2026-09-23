@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { WebSocket } from 'ws';
+import { validateOpcloudModel } from '../mcp-server/model-validation.js';
 
 const reservation = net.createServer();
 await new Promise((resolve) => reservation.listen(0, '127.0.0.1', resolve));
@@ -79,6 +80,9 @@ browser.on('message', async (data) => {
 });
 
 const tools = await client.listTools();
+assert.ok(tools.tools.some((tool) => tool.name === 'opcloud_get_modeling_guide'));
+assert.ok(tools.tools.some((tool) => tool.name === 'opcloud_get_model_template'));
+assert.match(client.getInstructions(), /opcloud_get_modeling_guide/);
 assert.ok(tools.tools.some((tool) => tool.name === 'opcloud_get_model'));
 assert.ok(tools.tools.some((tool) => tool.name === 'opcloud_export_image'));
 assert.ok(tools.tools.some((tool) => tool.name === 'opcloud_review_diagram'));
@@ -103,6 +107,12 @@ const importResult = await client.callTool({
 assert.equal(importResult.isError, true);
 assert.match(importResult.content[0].text, /currentOpd references missing visual/);
 
+const customModel = JSON.parse(fs.readFileSync(new URL('../examples/Two-Dish-Dinner-Corrected.opcl', import.meta.url), 'utf8'));
+customModel.logicalElements[0].name = 'CustomSVGObject';
+const customImport = await client.callTool({ name: 'opcloud_import_model', arguments: { model: customModel } });
+assert.equal(customImport.isError, true);
+assert.match(customImport.content[0].text, /Unsupported native element class/);
+
 await client.close();
 assert.equal((await readStatus(second)).connected, true, 'Closing one conversation must preserve the other.');
 const browserClosed = new Promise((resolve) => browser.once('close', resolve));
@@ -122,7 +132,7 @@ assert.equal((await readStatus(second)).opcloud.modelName, 'Reconnected');
 const daemonClosed = new Promise((resolve) => reconnectBrowser.once('close', resolve));
 process.kill(firstStatus.servicePid);
 await daemonClosed;
-assert.equal((await second.listTools()).tools.length, 7);
+assert.equal((await second.listTools()).tools.length, 9);
 let recovered;
 for (let attempt = 0; attempt < 20; attempt++) {
   recovered = await readStatus(second);
@@ -141,7 +151,24 @@ const blockedTransport = new StdioClientTransport({
 });
 const blockedClient = new Client({ name: 'blocked-port', version: '1.0.0' });
 await blockedClient.connect(blockedTransport);
-assert.equal((await blockedClient.listTools()).tools.length, 7);
+assert.equal((await blockedClient.listTools()).tools.length, 9);
+const guide = JSON.parse((await blockedClient.callTool({ name: 'opcloud_get_modeling_guide', arguments: {} })).content[0].text);
+assert.equal(guide.instructions, fs.readFileSync(new URL('../AGENTS.md', import.meta.url), 'utf8'));
+assert.equal(guide.templateTool, 'opcloud_get_model_template');
+assert.equal(guide.standardsCoverage.content, fs.readFileSync(new URL('../docs/iso-19450-2024-coverage.md', import.meta.url), 'utf8'));
+assert.equal(guide.standardsCoverage.status, 'partial_checks_not_conformance_assessed');
+const template = JSON.parse((await blockedClient.callTool({ name: 'opcloud_get_model_template', arguments: {} })).content[0].text);
+assert.deepEqual(template, JSON.parse(fs.readFileSync(new URL('../examples/Two-Dish-Dinner-Corrected.opcl', import.meta.url), 'utf8')));
+assert.equal(validateOpcloudModel(template).valid, true);
+const assessment = JSON.parse((await blockedClient.callTool({ name: 'opcloud_validate_model', arguments: { model: template } })).content[0].text);
+assert.equal(assessment.valid, true);
+assert.equal(assessment.isoConformance, 'not_assessed');
+assert.ok(assessment.semanticChecks.some((item) => item.ruleId === 'ISO-3.4-AGENT-HUMAN'));
+const missingEffectStates = structuredClone(template);
+missingEffectStates.logicalElements.find((element) => element.linkType === 0).linkType = 4;
+const effectImport = await blockedClient.callTool({ name: 'opcloud_import_model', arguments: { model: missingEffectStates } });
+assert.equal(effectImport.isError, true);
+assert.match(effectImport.content[0].text, /PROFILE-EFFECT-STATE-EVIDENCE/);
 assert.match((await readStatus(blockedClient)).error, /older bridge|another application/);
 await blockedClient.close();
 await new Promise((resolve) => blocker.close(resolve));

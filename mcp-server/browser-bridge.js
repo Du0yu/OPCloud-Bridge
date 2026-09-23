@@ -71,6 +71,7 @@ export class BrowserBridge {
       return;
     }
 
+    if (!message || typeof message !== 'object') return;
     if (message.type === 'hello') {
       this.clientInfo = {
         ...this.clientInfo,
@@ -83,10 +84,8 @@ export class BrowserBridge {
     if (message.type !== 'response' || !message.id) return;
     const pending = this.pending.get(message.id);
     if (!pending) return;
-    this.pending.delete(message.id);
-    clearTimeout(pending.timer);
-    if (message.ok) pending.resolve(message.result);
-    else pending.reject(new Error(message.error || 'Unknown browser bridge error.'));
+    pending.finish(message.ok ? null : new Error(message.error || 'Unknown browser bridge error.'), message.result);
+    pending.release();
   }
 
   isConnected() {
@@ -101,26 +100,52 @@ export class BrowserBridge {
     };
   }
 
-  call(action, payload = {}, timeoutMs = this.requestTimeoutMs) {
+  call(action, payload = {}, timeoutMs = this.requestTimeoutMs, signal) {
     if (!this.isConnected()) {
       throw new Error('No OPCloud browser is connected. Open or refresh https://opcloud-sandbox.web.app/.');
     }
 
     const id = randomUUID();
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        this.pending.delete(id);
-        reject(new Error(`Browser request timed out: ${action}`));
-      }, timeoutMs);
-      this.pending.set(id, { resolve, reject, timer });
-      this.client.send(JSON.stringify({ type: 'request', id, action, payload }));
+    const socket = this.client;
+    let releaseDrain;
+    const drained = new Promise((resolve) => { releaseDrain = resolve; });
+    const result = new Promise((resolve, reject) => {
+      let settled = false;
+      let timer;
+      const finish = (error, value) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        signal?.removeEventListener('abort', abort);
+        if (error) reject(error); else resolve(value);
+      };
+      const cancel = (error) => {
+        finish(error);
+        // Keep the queue occupied until the browser confirms completion or disconnects.
+        if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'cancel', id }));
+      };
+      const abort = () => cancel(new Error('Browser request cancelled.'));
+      const release = () => { this.pending.delete(id); releaseDrain(); };
+      if (signal?.aborted) {
+        finish(new Error('Browser request cancelled.'));
+        releaseDrain();
+        return;
+      }
+      timer = setTimeout(() => cancel(new Error(`Browser request timed out: ${action}`)), timeoutMs);
+      this.pending.set(id, { finish, release });
+      signal?.addEventListener('abort', abort, { once: true });
+      socket.send(JSON.stringify({ type: 'request', id, action, payload }), (error) => {
+        if (error) { finish(error); release(); }
+      });
     });
+    result.drained = drained;
+    return result;
   }
 
   rejectPending(error) {
     for (const pending of this.pending.values()) {
-      clearTimeout(pending.timer);
-      pending.reject(error);
+      pending.finish(error);
+      pending.release();
     }
     this.pending.clear();
   }

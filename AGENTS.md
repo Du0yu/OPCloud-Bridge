@@ -11,6 +11,8 @@ These instructions apply to the entire repository. Follow them whenever an agent
 
 Official reference: https://www.iso.org/standard/84612.html
 
+Rule coverage and evidence are tracked in [`docs/iso-19450-2024-coverage.md`](./docs/iso-19450-2024-coverage.md). Distinguish verified definitions, bridge-specific serialization/profile checks, and clauses awaiting full-text review. A passing validator result is not an ISO conformance finding.
+
 ## Objective
 
 Produce models that:
@@ -86,7 +88,7 @@ Use the numeric values expected by OPCloud:
 | `affiliation` | `0` | Systemic |
 | `affiliation` | `1` | Environmental |
 
-An agent is normally a physical environmental object. Tools, inputs, outputs, and the modeled system are normally systemic unless the scenario requires otherwise.
+Model a human Agent as physical. Environmental affiliation is a scenario default, not a universal ISO requirement: a human within the chosen system boundary may be systemic. Tools, inputs, outputs, and the modeled system are normally systemic unless the scenario requires otherwise.
 
 ### Link types
 
@@ -107,10 +109,11 @@ Use `OpmProceduralRelation` for procedural links and `OpmFundamentalRelation` fo
 
 Rules:
 
-- Use Agent only for a human or otherwise agentive environmental object.
+- Use Agent only for a human or a group of humans (ISO 19450:2024, 3.4). Do not treat software, AI, robots, or other autonomous equipment as human Agents. Choose their native relation according to whether they enable or undergo transformation; use Instrument only when required and not transformed. Confirm humanity from the scenario, not from a name-matching heuristic.
 - Use Instrument when the object is required but not transformed.
 - Use Consumption when the input ceases to exist in its modeled form.
 - Use Result only from a process to the object or state that the process actually creates.
+- Use Effect for an existing object whose state changes (ISO 19450:2024, 3.3). For this bridge's supported serialization profile, the complete model must provide owned native state evidence; the states need not appear in the current OPD. An Effect without any serialized state evidence is rejected by the bridge profile. Non-empty `statesWithoutVisual` with an unverified structure is preserved and flagged for manual review, not silently accepted as verified evidence. State presence alone does not prove a meaningful transition: review the intended change and generated OPL.
 - Do not connect two peer processes with Invocation merely to indicate visual order.
 - For a composite object, use Aggregation from the whole to each part. Do not claim that each contributing process independently creates the complete aggregate.
 
@@ -210,6 +213,8 @@ Do not hand-edit generated OPL to conceal an incorrect diagram. Correct the OPD/
 9. Review the generated OPL sentences against the intended semantics.
 
 Do not claim a model is validated if only JSON parsing was performed. Report separately whether schema references, OPCloud import, rendering, and OPL semantics were verified.
+
+Report validator `semanticChecks` and unresolved warnings, even when `valid` is true. `isoConformance: "not_assessed"` remains separate from structural validity. Human-agent identity and whether an Effect actually changes the same object require scenario/OPL review; do not add custom OPCL fields to manufacture evidence of compliance.
 
 ## MCP Workflow
 

@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.6.0
+// @version      1.7.1
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.6.0';
+  const USERSCRIPT_VERSION = '1.7.1';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -550,7 +550,11 @@
     socket.send(JSON.stringify(message));
   }
 
-  async function handleBridgeMessage(event) {
+  // This queue survives WebSocket restarts: an old async render must finish first.
+  let bridgeActionQueue = Promise.resolve();
+  const bridgeRequests = new WeakMap();
+
+  function handleBridgeMessage(event) {
     const socket = event.currentTarget;
     if (socket !== bridgeSocket) return;
     let message;
@@ -559,20 +563,38 @@
     } catch {
       return;
     }
-    if (message.type !== 'request' || !message.id || !message.action) return;
-
-    try {
-      const result = await handleBridgeAction(message.action, message.payload);
-      sendBridgeMessage({ type: 'response', id: message.id, ok: true, result }, socket);
-    } catch (error) {
-      console.error(`[OPCloud Bridge] ${message.action} failed:`, error);
-      sendBridgeMessage({
-        type: 'response',
-        id: message.id,
-        ok: false,
-        error: error?.message || String(error),
-      }, socket);
+    if (!message || typeof message.id !== 'string') return;
+    let requests = bridgeRequests.get(socket);
+    if (!requests) { requests = new Map(); bridgeRequests.set(socket, requests); }
+    if (message.type === 'cancel') {
+      const job = requests.get(message.id);
+      if (job) {
+        job.cancelled = true;
+        if (!job.started) {
+          requests.delete(message.id);
+          sendBridgeMessage({ type: 'response', id: message.id, ok: false, error: 'Request cancelled before execution.' }, socket);
+        }
+      }
+      return;
     }
+    if (message.type !== 'request' || !message.action || requests.has(message.id)) return;
+    const job = { started: false, cancelled: false };
+    requests.set(message.id, job);
+    const execute = async () => {
+      try {
+        if (job.cancelled || socket !== bridgeSocket || socket.readyState !== page.WebSocket.OPEN) return;
+        job.started = true;
+        const result = await handleBridgeAction(message.action, message.payload);
+        if (job.cancelled) throw new Error('Request cancelled after execution started; the operation may already have completed.');
+        sendBridgeMessage({ type: 'response', id: message.id, ok: true, result }, socket);
+      } catch (error) {
+        console.error(`[OPCloud Bridge] ${message.action} failed:`, error);
+        sendBridgeMessage({ type: 'response', id: message.id, ok: false, error: error?.message || String(error) }, socket);
+      } finally { requests.delete(message.id); }
+    };
+    const result = bridgeActionQueue.then(execute);
+    bridgeActionQueue = result.catch(() => {});
+    return result;
   }
 
   function scheduleBridgeReconnect() {

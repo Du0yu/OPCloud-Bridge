@@ -202,3 +202,21 @@ MCP sessions now share one browser bridge through local IPC instead of each bind
 The bottom-right **Restart bridge** button clears retry delays and reconnects the browser without changing its model. It cannot launch Node or reload a client's MCP tool catalog. A replaced browser tab pauses reconnection until you explicitly restart it, preventing tabs from repeatedly taking over each other's connection.
 
 When upgrading from 1.5.x, update the userscript and refresh OPCloud, then restart the `opcloud` MCP server in your client (or restart the client) to release the old process's port. Tools are now registered before bridge startup, so a port conflict produces a diagnostic from `opcloud_status` instead of hiding the entire tool catalog. The browser's connected label does not imply that the current conversation has loaded the tools.
+
+### Request safety (1.6.1)
+
+Queued requests are bound to the browser connection present on arrival. Switching tabs or reconnecting rejects stale requests; read the current model before retrying. MCP cancellation and deadlines skip operations that have not started. A native operation already in progress cannot necessarily be undone: the daemon waits for completion before advancing its queue, and the userscript serializes operations even across WebSocket restarts. If an operation never finishes, save your model before refreshing OPCloud.
+
+To upgrade from 1.6.0, update the userscript and refresh the page, then exit all MCP clients using this bridge and wait at least 30 seconds for the shared daemon to exit before reopening them. Quickly restarting just one session can reuse the old daemon.
+
+### Modeling guidance over MCP (1.7.0)
+
+Call `opcloud_get_modeling_guide` for the full AGENTS.md rules, supported types and validation limits, then `opcloud_get_model_template` for the complete canonical OPCL export. Both work without a browser connection or access to the repository filesystem. The rules and example are included in the distributed package. Generate fresh UUIDs for new elements and preserve unknown export fields.
+
+MCP initialization instructions and tool descriptions prompt agents to read these tools before modeling; client/model compliance is not guaranteed. Import independently rejects unsupported classes and link types/families, incompatible endpoint kinds, and invalid state ownership or references. Passing validation does not establish domain semantics, layout correctness, successful OPCloud rendering, or ISO compliance. Report unavailable checks rather than claiming they passed.
+
+### Partial ISO rule coverage (1.7.1)
+
+The [clause-to-code coverage table](docs/iso-19450-2024-coverage.md) distinguishes inspected definitions, bridge-profile checks and pending full-text review. It is also returned by the modeling guide. Agent means a human or human group; systemic affiliation is allowed, and names do not prove humanity. Effect checks seek owned native state evidence across the whole model, while opaque suppressed-state records require review. An export with no state evidence is rejected by the bridge profile, not reported as a formal ISO nonconformance finding.
+
+Validation includes `semanticChecks`, `requiresSemanticReview` and `isoConformance: "not_assessed"`. `valid: true` does not resolve semantic review or establish conformity. These checks run in the MCP validator; the userscript's manual file-import validator remains separate.

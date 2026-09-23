@@ -44,3 +44,29 @@ expectInvalid((candidate) => {
 }, 'has no targets');
 
 console.log('Validated MCP model validation behavior.');
+
+const find = (model, name) => model.logicalElements.find((element) => element.name === name);
+expectInvalid((candidate) => { candidate.logicalElements[0].name = 'CustomSVGObject'; }, 'Unsupported native element class');
+expectInvalid((candidate) => { find(candidate, 'OpmProceduralRelation').linkType = 999; }, 'unsupported linkType');
+expectInvalid((candidate) => { find(candidate, 'OpmProceduralRelation').linkType = '0'; }, 'unsupported linkType');
+expectInvalid((candidate) => { find(candidate, 'OpmProceduralRelation').linkType = 11; }, 'requires OpmFundamentalRelation');
+expectInvalid((candidate) => {
+  const relation = find(candidate, 'OpmProceduralRelation').visualElementsParams[0];
+  [relation.sourceVisualElement, relation.targetVisualElements[0].targetVisualElement] =
+    [relation.targetVisualElements[0].targetVisualElement, relation.sourceVisualElement];
+}, 'invalid endpoint kinds or direction');
+expectInvalid((candidate) => { find(candidate, 'OpmLogicalObject').essence = 1; }, 'PROFILE-AGENT-PHYSICAL');
+expectInvalid((candidate) => {
+  find(candidate, 'OpmLogicalState').visualElementsParams[0].fatherObjectId = find(candidate, 'OpmLogicalProcess').visualElementsParams[0].id;
+}, 'references missing object fatherObjectId');
+expectInvalid((candidate) => {
+  find(candidate, 'OpmLogicalProcess').visualElementsParams[0].children.push(find(candidate, 'OpmLogicalState').visualElementsParams[0].id);
+}, 'must belong to its corresponding object');
+expectInvalid((candidate) => { find(candidate, 'OpmLogicalObject').visualElementsParams[0].children.push('missing-child'); }, 'references missing child');
+
+// Preserve native fields not yet understood by the bridge; do not reduce the export schema.
+const withMetadata = structuredClone(model);
+withMetadata.logicalElements[0].futureNativeMetadata = { note: 'preserve me' };
+assert.equal(validateOpcloudModel(withMetadata).valid, true);
+assert.deepEqual(withMetadata.logicalElements[0].futureNativeMetadata, { note: 'preserve me' });
+console.log('Validated native classes, supported link families and directions, and state ownership.');

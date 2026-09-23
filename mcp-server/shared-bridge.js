@@ -67,10 +67,7 @@ export class SharedBridge {
         readMessages(socket, (message) => {
           const pending = this.pending.get(message.id);
           if (!pending) return;
-          this.pending.delete(message.id);
-          clearTimeout(pending.timer);
-          if (message.ok) pending.resolve(message.result);
-          else pending.reject(new Error(message.error));
+          pending.finish(message.ok ? null : new Error(message.error), message.result);
         });
         return;
       } catch {
@@ -89,28 +86,44 @@ export class SharedBridge {
     throw new Error(`Shared bridge unavailable on port ${this.port}. An older bridge or another application may own this port; stop that process and retry.`);
   }
 
-  async call(action, payload = {}, timeoutMs = 30000) {
+  async call(action, payload = {}, timeoutMs = 30000, signal) {
+    signal?.throwIfAborted();
     await this.connect();
+    signal?.throwIfAborted();
     const id = randomUUID();
+    const socket = this.socket;
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
+      let timer;
+      const finish = (error, value) => {
+        if (!this.pending.has(id)) return;
         this.pending.delete(id);
-        reject(new Error(`Shared bridge request timed out: ${action}`));
-      }, timeoutMs + 1000);
-      this.pending.set(id, { resolve, reject, timer });
-      this.socket.write(JSON.stringify({ id, action, payload, timeoutMs }) + '\n');
+        clearTimeout(timer);
+        signal?.removeEventListener('abort', abort);
+        if (error) reject(error); else resolve(value);
+      };
+      const cancel = (error) => {
+        if (!this.pending.has(id)) return;
+        if (!socket.destroyed) socket.write(JSON.stringify({ type: 'cancel', id }) + '\n');
+        finish(error);
+      };
+      const abort = () => cancel(new Error('MCP request cancelled.'));
+      timer = setTimeout(() => cancel(new Error(`Shared bridge request timed out: ${action}`)), timeoutMs + 1000);
+      this.pending.set(id, { finish });
+      signal?.addEventListener('abort', abort, { once: true });
+      socket.write(JSON.stringify({ id, action, payload, timeoutMs }) + '\n', (error) => {
+        if (error) finish(error);
+      });
     });
   }
 
-  async status() {
-    try { return await this.call('bridgeStatus'); }
+  async status(signal) {
+    try { return await this.call('bridgeStatus', {}, 30000, signal); }
     catch (error) { return { connected: false, endpoint: `ws://127.0.0.1:${this.port}`, error: error.message }; }
   }
 
   rejectPending(error) {
     for (const pending of this.pending.values()) {
-      clearTimeout(pending.timer);
-      pending.reject(error);
+      pending.finish(error);
     }
     this.pending.clear();
   }

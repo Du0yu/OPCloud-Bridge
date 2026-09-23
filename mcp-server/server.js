@@ -5,6 +5,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { SharedBridge } from './shared-bridge.js';
 import { validateOpcloudModel } from './model-validation.js';
+import { MODELING_INSTRUCTIONS, getModelingGuide, getModelTemplate } from './modeling-guide.js';
 
 const port = Number.parseInt(process.env.OPCLOUD_BRIDGE_PORT || '17373', 10);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -16,8 +17,8 @@ const bridge = new SharedBridge({ port });
 
 const server = new McpServer({
   name: 'opcloud-bridge',
-  version: '1.6.0',
-});
+  version: '1.7.1',
+}, { instructions: MODELING_INSTRUCTIONS });
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -53,66 +54,78 @@ function assertImagePayload(image, expectedMimeType = null) {
 }
 
 function registerTool(name, definition, handler) {
-  server.registerTool(name, definition, async (args) => {
+  server.registerTool(name, { inputSchema: {}, ...definition }, async (args, extra) => {
     try {
-      return await handler(args);
+      return await handler(args, extra.signal);
     } catch (error) {
       return errorResult(error);
     }
   });
 }
 
+registerTool('opcloud_get_modeling_guide', {
+  title: 'Read OPCloud modeling rules',
+  description: 'Read this before creating or modifying an OPCloud model. Returns the repository AGENTS.md rules, supported native element/link types, and validation limits. Available without a browser connection. Then call opcloud_get_model_template for complete export structures.',
+  annotations: { readOnlyHint: true, openWorldHint: false },
+}, async () => textResult(await getModelingGuide()));
+
+registerTool('opcloud_get_model_template', {
+  title: 'Read the complete native OPCloud template',
+  description: 'Read this after opcloud_get_modeling_guide and before generating a model. Returns the complete canonical Two-Dish Dinner OPCL export, including all metadata and native element/relation structures. Clone the relevant structures, preserve unknown fields, replace domain content, and generate fresh UUIDs for new elements. Available offline.',
+  annotations: { readOnlyHint: true, openWorldHint: false },
+}, async () => textResult(JSON.stringify(await getModelTemplate())));
+
 registerTool('opcloud_status', {
   title: 'OPCloud connection status',
   description: 'Check whether the OPCloud browser tab and userscript are connected to the local bridge.',
-}, async () => {
-  const localStatus = await bridge.status();
+}, async (_, signal) => {
+  const localStatus = await bridge.status(signal);
   if (!localStatus.connected) return textResult(localStatus);
-  const browserStatus = await bridge.call('status');
+  const browserStatus = await bridge.call('status', {}, 30000, signal);
   return textResult({ ...localStatus, opcloud: browserStatus });
 });
 
 registerTool('opcloud_get_model', {
   title: 'Read current OPCloud model',
   description: 'Return the complete JSON serialization of the model currently open in OPCloud.',
-}, async () => {
-  const result = await bridge.call('getModel');
+}, async (_, signal) => {
+  const result = await bridge.call('getModel', {}, 30000, signal);
   return textResult(result.model);
 });
 
 registerTool('opcloud_import_model', {
   title: 'Import an OPCloud model',
-  description: 'Load a complete OPCloud JSON/OPCL model into the open browser tab. Set replaceExisting=true to explicitly authorize replacing a non-empty canvas.',
+  description: 'Load a complete OPCloud JSON/OPCL model into the open browser tab. Before generating it, read opcloud_get_modeling_guide and opcloud_get_model_template; preserve the current model and run opcloud_validate_model. Set replaceExisting=true only to intentionally replace a non-empty canvas. After import, call opcloud_review_diagram and check its OPL and JPEG.',
   inputSchema: {
     model: z.record(z.string(), z.unknown()).describe('Complete parsed OPCloud model object.'),
     replaceExisting: z.boolean().default(false).describe('Explicitly allow replacing an existing non-empty model.'),
   },
-}, async ({ model, replaceExisting }) => {
+}, async ({ model, replaceExisting }, signal) => {
   const validation = validateOpcloudModel(model);
   if (!validation.valid) {
     throw new Error(`Model validation failed: ${validation.errors.join(' ')}`);
   }
-  const result = await bridge.call('importModel', { model, replaceExisting });
+  const result = await bridge.call('importModel', { model, replaceExisting }, 30000, signal);
   return textResult({ ...result, validation });
 });
 
 registerTool('opcloud_get_opl', {
   title: 'Read generated OPL',
   description: 'Generate and return the OPL sentences for the current OPCloud model.',
-}, async () => {
-  const result = await bridge.call('getOpl', {}, 60000);
+}, async (_, signal) => {
+  const result = await bridge.call('getOpl', {}, 60000, signal);
   return textResult(result.opl);
 });
 
 registerTool('opcloud_validate_model', {
   title: 'Validate an OPCloud model',
-  description: 'Validate an supplied model, or validate the model currently open in OPCloud when model is omitted.',
+  description: 'Check native structure, supported links, state ownership and bridge-profile Effect state evidence. Read opcloud_get_modeling_guide before generation. Inspect warnings and semanticChecks even when valid is true: human Agent identity and meaningful state changes require review. Omit model to read the browser model. isoConformance remains not_assessed; this tool does not verify rendering, full semantics, OPL or ISO compliance.',
   inputSchema: {
     model: z.record(z.string(), z.unknown()).optional().describe('Optional complete model object. Omit to validate the browser model.'),
   },
-}, async ({ model }) => {
+}, async ({ model }, signal) => {
   let target = model;
-  if (!target) target = (await bridge.call('getModel')).model;
+  if (!target) target = (await bridge.call('getModel', {}, 30000, signal)).model;
   return textResult(validateOpcloudModel(target));
 });
 
@@ -122,8 +135,8 @@ registerTool('opcloud_export_image', {
   inputSchema: {
     format: z.enum(['jpeg', 'svg']).default('jpeg'),
   },
-}, async ({ format }) => {
-  const result = assertImagePayload(await bridge.call('exportImage', { format }, 60000));
+}, async ({ format }, signal) => {
+  const result = assertImagePayload(await bridge.call('exportImage', { format }, 60000, signal));
   return {
     content: [
       { type: 'text', text: result.fileName },
@@ -135,8 +148,8 @@ registerTool('opcloud_export_image', {
 registerTool('opcloud_review_diagram', {
   title: 'Review the current OPCloud diagram',
   description: 'Return a closed-loop review snapshot containing the current model summary, generated OPL, and the actual current OPD rendered as a JPEG image. Use this after importing or editing a model so the Agent can visually inspect the result.',
-}, async () => {
-  const result = await bridge.call('reviewSnapshot', {}, 60000);
+}, async (_, signal) => {
+  const result = await bridge.call('reviewSnapshot', {}, 60000, signal);
   assertImagePayload(result.image, 'image/jpeg');
   const reviewText = JSON.stringify({
     modelSummary: result.modelSummary,

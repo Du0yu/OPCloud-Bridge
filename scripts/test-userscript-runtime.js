@@ -47,6 +47,7 @@ const timers = new Map();
 let timerId = 0;
 let bridgeStatus;
 let resolveAction;
+let actionCount = 0;
 class FakeSocket {
   static OPEN = 1;
   static CONNECTING = 0;
@@ -70,7 +71,7 @@ const bridgeContext = vm.createContext({
   console,
   setBridgeStatus: (value) => { bridgeStatus = value; },
   bridgeUrl: () => 'ws://127.0.0.1:17373',
-  handleBridgeAction: () => new Promise((resolve) => { resolveAction = resolve; }),
+  handleBridgeAction: () => { actionCount++; return new Promise((resolve) => { resolveAction = resolve; }); },
 });
 vm.runInContext(`let bridgeSocket = null, bridgeReconnectTimer = null, bridgeReconnectDelay = 1000;
   const USERSCRIPT_VERSION = 'test';
@@ -81,6 +82,7 @@ const oldSocket = sockets[0];
 oldSocket.emit('open');
 assert.equal(bridgeStatus, 'bridgeConnected');
 const inFlight = oldSocket.emit('message', { data: JSON.stringify({ type: 'request', id: 'old', action: 'getModel' }) });
+await Promise.resolve();
 bridgeContext.restartBridge();
 assert.equal(oldSocket.readyState, 2);
 const newSocket = sockets[1];
@@ -102,3 +104,39 @@ assert.equal(timers.size, 1, 'Unexpected disconnection must schedule automatic r
 bridgeContext.restartBridge();
 assert.equal(timers.size, 1, 'Restart cancels the old retry and leaves only the connection watchdog.');
 console.log('Validated frontend restart, stale events, response isolation, and automatic reconnect.');
+
+const current = sockets.at(-1);
+current.emit('open');
+const sendRequest = (socket, id) => socket.emit('message', { data: JSON.stringify({ type: 'request', id, action: 'getModel' }) });
+const running = sendRequest(current, 'slow');
+await Promise.resolve();
+const finishRunning = resolveAction;
+const beforeQueued = actionCount;
+const cancelled = sendRequest(current, 'cancelled');
+current.emit('message', { data: JSON.stringify({ type: 'cancel', id: 'cancelled' }) });
+bridgeContext.restartBridge();
+const restarted = sockets.at(-1);
+restarted.emit('open');
+const afterRestart = sendRequest(restarted, 'after-restart');
+await Promise.resolve();
+assert.equal(actionCount, beforeQueued, 'Restart must not overlap the previous async operation.');
+finishRunning({});
+await running;
+await cancelled;
+// Allow the next queued job to enter handleBridgeAction.
+await Promise.resolve();
+assert.equal(actionCount, beforeQueued + 1, 'The cancelled queued operation must be skipped.');
+resolveAction({});
+await afterRestart;
+assert.equal(current.sent.filter((message) => message.id === 'cancelled').length, 1);
+console.log('Validated frontend cancellation and serialization across WebSocket restarts.');
+
+const cancellingActive = sendRequest(restarted, 'active-cancel');
+await Promise.resolve();
+const finishCancelledActive = resolveAction;
+restarted.emit('message', { data: JSON.stringify({ type: 'cancel', id: 'active-cancel' }) });
+assert.equal(restarted.sent.some((message) => message.id === 'active-cancel'), false,
+  'An active operation must not acknowledge cancellation before it finishes.');
+finishCancelledActive({});
+await cancellingActive;
+assert.equal(restarted.sent.find((message) => message.id === 'active-cancel').ok, false);
