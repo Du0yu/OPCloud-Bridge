@@ -13,7 +13,7 @@ export function validateOpcloudModel(model) {
 
   const logicalIds = new Set();
   const visualIds = new Set();
-  const visuals = [];
+  const visuals = new Map();
   for (const logical of model.logicalElements) {
     if (!logical?.lid) {
       errors.push('A logical element is missing lid.');
@@ -24,7 +24,7 @@ export function validateOpcloudModel(model) {
     }
 
     if (!Array.isArray(logical?.visualElementsParams)) {
-      warnings.push(`Logical element ${logical?.lid || '(unknown)'} has no visualElementsParams array.`);
+      errors.push(`Logical element ${logical?.lid || '(unknown)'} has no visualElementsParams array.`);
       continue;
     }
     for (const visual of logical.visualElementsParams) {
@@ -34,12 +34,13 @@ export function validateOpcloudModel(model) {
         errors.push(`Duplicate visual id: ${visual.id}`);
       } else {
         visualIds.add(visual.id);
-        visuals.push(visual);
+        visuals.set(visual.id, { visual, logical });
       }
     }
   }
 
   const opdIds = new Set();
+  const opdVisualIds = new Set();
   for (const opd of model.opds) {
     if (!opd?.id) {
       errors.push('An OPD is missing id.');
@@ -58,29 +59,36 @@ export function validateOpcloudModel(model) {
       if (!visualIds.has(visualId)) {
         errors.push(`OPD ${opd.id || '(unknown)'} references missing visual ${visualId}.`);
       }
+      opdVisualIds.add(visualId);
     }
   }
 
-  for (const visual of visuals) {
-    if (visual.fatherObjectId && !visualIds.has(visual.fatherObjectId)) {
-      errors.push(`State ${visual.id} references missing fatherObjectId ${visual.fatherObjectId}.`);
+  for (const [id, { visual, logical }] of visuals) {
+    if (!opdVisualIds.has(id)) {
+      errors.push(`Visual ${id} is not listed in any OPD.`);
     }
-    if (visual.fatherObjectId) {
-      const parent = visuals.find((candidate) => candidate.id === visual.fatherObjectId);
-      if (!parent?.children?.includes(visual.id)) {
+    if (logical.name === 'OpmLogicalState') {
+      const parent = visuals.get(visual.fatherObjectId);
+      if (!parent || parent.logical.name !== 'OpmLogicalObject') {
+        errors.push(`State ${id} references missing object fatherObjectId ${visual.fatherObjectId}.`);
+      } else if (!parent.visual.children?.includes(id)) {
         errors.push(`Parent object ${visual.fatherObjectId} does not list state ${visual.id} as a child.`);
       }
     }
 
-    const sourceId = visual.sourceVisualElement;
-    if (sourceId && !visualIds.has(sourceId)) {
-      errors.push(`Relation ${visual.id} references missing source ${sourceId}.`);
-    }
-    if (Array.isArray(visual.targetVisualElements)) {
-      for (const target of visual.targetVisualElements) {
-        const targetId = target?.targetVisualElement;
-        if (targetId && !visualIds.has(targetId)) {
-          errors.push(`Relation ${visual.id} references missing target ${targetId}.`);
+    if (logical.name?.endsWith('Relation')) {
+      const sourceId = visual.sourceVisualElement;
+      if (!sourceId || !visualIds.has(sourceId)) {
+        errors.push(`Relation ${id} references missing source ${sourceId || '(empty)'}.`);
+      }
+      if (!Array.isArray(visual.targetVisualElements) || visual.targetVisualElements.length === 0) {
+        errors.push(`Relation ${id} has no targets.`);
+      } else {
+        for (const target of visual.targetVisualElements) {
+          const targetId = target?.targetVisualElement;
+          if (!targetId || !visualIds.has(targetId)) {
+            errors.push(`Relation ${id} references missing target ${targetId || '(empty)'}.`);
+          }
         }
       }
     }
@@ -91,6 +99,21 @@ export function validateOpcloudModel(model) {
     errors.push('currentOpd.id is missing.');
   } else if (!opdIds.has(currentOpdId)) {
     errors.push(`currentOpd.id references missing OPD ${currentOpdId}.`);
+  } else {
+    const opd = model.opds.find((candidate) => candidate.id === currentOpdId);
+    if (!Array.isArray(model.currentOpd.visualElements)) {
+      errors.push('currentOpd.visualElements must be an array.');
+    } else {
+      const currentVisuals = new Set(model.currentOpd.visualElements);
+      for (const id of currentVisuals) {
+        if (!visualIds.has(id)) errors.push(`currentOpd references missing visual ${id}.`);
+      }
+      if (Array.isArray(opd.visualElements) &&
+          (currentVisuals.size !== new Set(opd.visualElements).size ||
+           opd.visualElements.some((id) => !currentVisuals.has(id)))) {
+        errors.push(`currentOpd.visualElements does not match OPD ${currentOpdId}.`);
+      }
+    }
   }
 
   if (!model.name) warnings.push('Model name is empty.');

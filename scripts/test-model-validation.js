@@ -12,4 +12,35 @@ const invalidResult = validateOpcloudModel(invalidModel);
 assert.equal(invalidResult.valid, false);
 assert.ok(invalidResult.errors.some((error) => error.includes('missing OPD')));
 
+function expectInvalid(change, expectedError) {
+  const candidate = structuredClone(model);
+  change(candidate);
+  const result = validateOpcloudModel(candidate);
+  assert.equal(result.valid, false, `${expectedError} should fail validation.`);
+  assert.ok(result.errors.some((error) => error.includes(expectedError)), result.errors.join('\n'));
+}
+
+expectInvalid((candidate) => {
+  candidate.opds[0].visualElements.pop();
+  candidate.currentOpd.visualElements.pop();
+}, 'is not listed in any OPD');
+
+expectInvalid((candidate) => {
+  candidate.currentOpd.visualElements = ['missing-visual'];
+}, 'currentOpd references missing visual');
+
+expectInvalid((candidate) => {
+  candidate.currentOpd.visualElements.pop();
+}, 'does not match OPD');
+
+expectInvalid((candidate) => {
+  const relation = candidate.logicalElements.find((element) => element.name.endsWith('Relation'));
+  delete relation.visualElementsParams[0].sourceVisualElement;
+}, 'references missing source');
+
+expectInvalid((candidate) => {
+  const relation = candidate.logicalElements.find((element) => element.name.endsWith('Relation'));
+  relation.visualElementsParams[0].targetVisualElements = [];
+}, 'has no targets');
+
 console.log('Validated MCP model validation behavior.');

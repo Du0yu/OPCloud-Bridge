@@ -18,7 +18,7 @@ console.error(`[OPCloud Bridge] Browser bridge listening on ws://127.0.0.1:${por
 
 const server = new McpServer({
   name: 'opcloud-bridge',
-  version: '1.3.0',
+  version: '1.5.1',
 });
 
 function textResult(value) {

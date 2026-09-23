@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -68,6 +69,15 @@ const review = await client.callTool({ name: 'opcloud_review_diagram', arguments
 assert.equal(review.content[1].type, 'image');
 assert.equal(review.content[1].mimeType, 'image/jpeg');
 assert.equal(review.content[1].data, '/9j/2Q==');
+
+const invalidModel = JSON.parse(fs.readFileSync(new URL('../examples/Two-Dish-Dinner-Corrected.opcl', import.meta.url), 'utf8'));
+invalidModel.currentOpd.visualElements = ['missing-visual'];
+const importResult = await client.callTool({
+  name: 'opcloud_import_model',
+  arguments: { model: invalidModel, replaceExisting: true },
+});
+assert.equal(importResult.isError, true);
+assert.match(importResult.content[0].text, /currentOpd references missing visual/);
 
 browser.close();
 await client.close();

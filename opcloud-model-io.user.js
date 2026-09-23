@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.5.0
+// @version      1.5.1
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.5.0';
+  const USERSCRIPT_VERSION = '1.5.1';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -418,8 +418,7 @@
     return json;
   }
 
-  function renderImportedModel(json) {
-    const model = currentModel();
+  function applyImportedModel(model, json) {
     model.fromJson(json);
 
     if (initService.oplService?.userOplSettings) {
@@ -432,16 +431,40 @@
     initService.modelService.setName(json.name || 'Imported Model');
   }
 
+  function renderImportedModel(json) {
+    const model = currentModel();
+    const previous = JSON.parse(JSON.stringify(model.toJson()));
+    try {
+      applyImportedModel(model, json);
+    } catch (error) {
+      try {
+        applyImportedModel(model, previous);
+      } catch (restoreError) {
+        throw new AggregateError([error, restoreError],
+          `Import failed and the previous model could not be fully restored: ${error.message}; ${restoreError.message}`);
+      }
+      throw error;
+    }
+  }
+
+  function plainOpl(value) {
+    return String(value ?? '')
+      .replace(/\.\s*"\s+lid="[^"]+">/g, '\n')
+      .replace(/<\/?[^>]+>/g, '')
+      .replace(/[ \t]*\n[ \t]*/g, '\n')
+      .trim();
+  }
+
   function generatedOpl() {
     if (!initService) throw new Error(t('notConnected'));
     if (typeof initService.modelService?.getOPL === 'function') {
-      return initService.modelService.getOPL();
+      return plainOpl(initService.modelService.getOPL());
     }
     if (typeof initService.oplService?.generateOplTextOnly === 'function') {
-      return initService.oplService.generateOplTextOnly()
+      return plainOpl(initService.oplService.generateOplTextOnly()
         .filter((item) => item?.opl)
-        .map((item) => String(item.opl).replace(/<\/?[^>]+>/g, '').trim())
-        .join(' ');
+        .map((item) => item.opl)
+        .join('\n'));
     }
     throw new Error(t('oplUnsupported'));
   }
