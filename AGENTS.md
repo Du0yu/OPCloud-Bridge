@@ -58,6 +58,15 @@ The abbreviated objects above illustrate required top-level keys only. For a rea
 
 ## Modeling Rules
 
+### Native OPCloud elements and links only
+
+- Use only OPCloud-native **Object**, **Process**, and **State** elements to represent model content. Each State must belong to its corresponding Object; never create standalone states or attach states to a Process.
+- Use the native logical and visual element structures from a known-good OPCloud export. Do not invent element classes, custom shapes, or substitute generic diagram nodes for native elements.
+- Use only OPCloud-native links with their native relation classes, supported `linkType` values, endpoint structures, and semantics. Do not invent link types or use custom arrows, lines, labels, SVG, HTML, or canvas overlays to simulate model relations or elements.
+- The link table below documents known mappings; it is not evidence that an unlisted type is supported. Before using an unlisted native link type, verify its serialization and semantics against a known-good OPCloud export and the native application. Never guess a numeric `linkType`.
+- Express domain-specific concepts through the names, states, and native relations of these elements. If a requested notation cannot be expressed with native elements and links, explain the limitation instead of introducing custom notation.
+- These restrictions govern model content, not the required OPD containers, metadata, or bridge control-panel UI. Continue preserving required export fields.
+
 ### Things
 
 - Name objects with nouns, such as `Home Cook`, `Soup Pot`, or `Vegetable Soup`.
@@ -190,7 +199,7 @@ Do not hand-edit generated OPL to conceal an incorrect diagram. Correct the OPD/
 3. Reuse complete element templates from a known-good exported `.opcl`.
 4. Generate fresh UUIDs for added elements.
 5. Update OPD and current-OPD visual ID lists.
-6. Check semantic direction for every link.
+6. Check that every model element and link is OPCloud-native, that every State belongs to its corresponding Object, and that every link has the correct semantic direction. Reject custom element classes, fabricated link types, and simulated diagram overlays.
 7. Run:
 
    ```bash
