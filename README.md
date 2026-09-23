@@ -38,12 +38,14 @@
 ```text
 Codex / Claude / MCP Client
           ↕ MCP stdio
-本地 OPCloud Bridge 进程
+每个对话独立的 MCP 进程
+          ↕ 本机 IPC
+共享 OPCloud Bridge 服务
           ↕ WebSocket（127.0.0.1:17373）
 油猴脚本 ↔ OPCloud 页面
 ```
 
-油猴脚本不能在浏览器中监听端口，因此本地进程同时充当 MCP Server 和 WebSocket Server。油猴脚本会主动连接它，并在断开后自动重试。
+多个 MCP 会话通过本机 IPC 共用一个浏览器桥接服务，避免争抢 17373 端口。关闭一个会话不会断开其他会话；最后一个会话关闭 30 秒后，共享服务自动退出。会话仍在运行时会自动恢复意外退出的共享服务。工具注册不依赖浏览器连接；连接不可用时，`opcloud_status` 会返回诊断信息。浏览器操作按到达顺序执行，断开的请求不会自动重放。
 
 ### MCP 客户端配置
 
@@ -60,7 +62,7 @@ Codex / Claude / MCP Client
 }
 ```
 
-部分 Windows 客户端需要将 `command` 写成 `npx.cmd`。配置完成后重启 MCP 客户端，并打开或刷新 [OPCloud Sandbox](https://opcloud-sandbox.web.app/)。右下角出现“`MCP：Agent 已连接`”即连接成功。
+部分 Windows 客户端需要将 `command` 写成 `npx.cmd`。配置完成后重启 MCP 客户端，并打开或刷新 [OPCloud Sandbox](https://opcloud-sandbox.web.app/)。右下角出现“`MCP：本地桥接已连接`”即连接成功。
 
 也可以克隆仓库并在本地运行：
 
@@ -80,7 +82,15 @@ codex mcp get opcloud
 
 请将 `C:\path\to\OPCloud-Bridge` 替换为你克隆本仓库后的实际绝对路径。
 
-登记后请新建一个 Codex 会话。MCP Server 会由 Codex 自动启动，不需要同时手动运行 `npm start`。随后打开或刷新 OPCloud；油猴面板显示“`MCP：Agent 已连接`”即表示浏览器桥已接通。
+登记后请新建一个 Codex 会话。MCP Server 会由 Codex 自动启动，不需要同时手动运行 `npm start`。随后打开或刷新 OPCloud；油猴面板显示“`MCP：本地桥接已连接`”即表示浏览器桥已接通。
+
+### 重启桥接与工具加载排障
+
+页面右下角的“重启桥接”会关闭旧 WebSocket、清除重试等待并立即重新连接，保留当前模型。此按钮重启的是浏览器连接，不能启动本地 Node 进程或重新加载 Codex 的工具列表。多个 OPCloud 标签页中，最新连接的页面接管桥接；被替换的页面暂停自动重连，可点击“重启桥接”切回。
+
+从 1.5.x 升级时，先更新油猴脚本并刷新页面，再在 MCP 客户端中重启 `opcloud` 服务（必要时重启客户端），让旧版独占端口的进程退出。只更新磁盘文件不会替换已运行的旧进程。
+
+如果工具没有自动加载，检查 MCP 客户端是否成功启动并发现 `opcloud` 工具。旧版会在注册工具前因 `EADDRINUSE` 退出；新版先注册全部工具，再连接共享服务。若 `opcloud_status` 提示旧进程占用端口，应先确认该进程确实是旧桥接服务，再退出它。页面显示“本地桥接已连接”仅代表浏览器与桥接服务连通，不代表当前对话已经加载工具。
 
 ### 连接测试
 

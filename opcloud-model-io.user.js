@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.5.1
+// @version      1.6.0
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.5.1';
+  const USERSCRIPT_VERSION = '1.6.0';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -34,6 +34,9 @@
       exportJpeg: 'Export JPEG',
       exportSvg: 'Export SVG',
       saveOpl: 'Save OPL',
+      restartBridge: 'Restart bridge',
+      restartBridgeTitle: 'Reconnect to the local bridge without changing the model',
+      bridgeReplaced: 'MCP: Another OPCloud tab is active; restart here to switch back',
       exportJpegTitle: 'Export the current OPD at 2× resolution',
       exportSvgTitle: 'Export the current OPD as a vector image',
       saveOplTitle: 'Save the OPL generated for the current model',
@@ -41,7 +44,7 @@
       connected: 'Connected to OPCloud',
       connectionFailed: 'Connection failed. Refresh the page to retry.',
       bridgeConnecting: 'MCP: Connecting to local service…',
-      bridgeConnected: 'MCP: Agent connected',
+      bridgeConnected: 'MCP: Local bridge connected',
       bridgeWaiting: 'MCP: Waiting for local service',
       invalidImageData: 'OPCloud returned invalid image data',
       notConnected: 'Not connected to OPCloud',
@@ -79,6 +82,9 @@
       exportJpeg: '导出 JPEG',
       exportSvg: '导出 SVG',
       saveOpl: '保存 OPL',
+      restartBridge: '重启桥接',
+      restartBridgeTitle: '重新连接本地桥接服务，保留当前模型',
+      bridgeReplaced: 'MCP：其他 OPCloud 标签页已接管，点击重启可切回',
       exportJpegTitle: '导出当前 OPD，2× 分辨率',
       exportSvgTitle: '导出当前 OPD 矢量图',
       saveOplTitle: '将当前模型生成的 OPL 保存到本地',
@@ -86,7 +92,7 @@
       connected: '已连接 OPCloud',
       connectionFailed: '连接失败，请刷新页面重试',
       bridgeConnecting: 'MCP：正在连接本地服务…',
-      bridgeConnected: 'MCP：Agent 已连接',
+      bridgeConnected: 'MCP：本地桥接已连接',
       bridgeWaiting: 'MCP：等待本地服务',
       invalidImageData: 'OPCloud 返回了无效的图像数据',
       notConnected: '尚未连接到 OPCloud',
@@ -265,7 +271,7 @@
       if (!initService) await new Promise((resolve) => window.setTimeout(resolve, 400));
     }
 
-    const buttons = document.querySelectorAll(`#${PANEL_ID} .opcloud-io-actions button`);
+    const buttons = document.querySelectorAll(`#${PANEL_ID} .opcloud-io-actions button:not([data-action="restart"])`);
     buttons.forEach((button) => { button.disabled = !initService; });
     if (initService) {
       setStatus(t('connected'), 'ok', 0);
@@ -539,12 +545,14 @@
     throw new Error(t('unknownAgentAction', { action }));
   }
 
-  function sendBridgeMessage(message) {
-    if (!bridgeSocket || bridgeSocket.readyState !== page.WebSocket.OPEN) return;
-    bridgeSocket.send(JSON.stringify(message));
+  function sendBridgeMessage(message, socket = bridgeSocket) {
+    if (!socket || socket !== bridgeSocket || socket.readyState !== page.WebSocket.OPEN) return;
+    socket.send(JSON.stringify(message));
   }
 
   async function handleBridgeMessage(event) {
+    const socket = event.currentTarget;
+    if (socket !== bridgeSocket) return;
     let message;
     try {
       message = JSON.parse(event.data);
@@ -555,7 +563,7 @@
 
     try {
       const result = await handleBridgeAction(message.action, message.payload);
-      sendBridgeMessage({ type: 'response', id: message.id, ok: true, result });
+      sendBridgeMessage({ type: 'response', id: message.id, ok: true, result }, socket);
     } catch (error) {
       console.error(`[OPCloud Bridge] ${message.action} failed:`, error);
       sendBridgeMessage({
@@ -563,7 +571,7 @@
         id: message.id,
         ok: false,
         error: error?.message || String(error),
-      });
+      }, socket);
     }
   }
 
@@ -577,8 +585,19 @@
     if (bridgeSocket && [page.WebSocket.CONNECTING, page.WebSocket.OPEN].includes(bridgeSocket.readyState)) return;
     try {
       setBridgeStatus(t('bridgeConnecting'));
-      bridgeSocket = new page.WebSocket(bridgeUrl());
-      bridgeSocket.addEventListener('open', () => {
+      const socket = new page.WebSocket(bridgeUrl());
+      bridgeSocket = socket;
+      const connectTimeout = window.setTimeout(() => {
+        if (socket === bridgeSocket && socket.readyState === page.WebSocket.CONNECTING) {
+          bridgeSocket = null;
+          socket.close();
+          setBridgeStatus(t('bridgeWaiting'));
+          scheduleBridgeReconnect();
+        }
+      }, 5000);
+      socket.addEventListener('open', () => {
+        window.clearTimeout(connectTimeout);
+        if (socket !== bridgeSocket) return;
         bridgeReconnectDelay = 1000;
         setBridgeStatus(t('bridgeConnected'), 'ok');
         sendBridgeMessage({
@@ -587,12 +606,20 @@
           userscriptVersion: USERSCRIPT_VERSION,
         });
       });
-      bridgeSocket.addEventListener('message', handleBridgeMessage);
-      bridgeSocket.addEventListener('close', () => {
+      socket.addEventListener('message', handleBridgeMessage);
+      socket.addEventListener('close', (event) => {
+        window.clearTimeout(connectTimeout);
+        if (socket !== bridgeSocket) return;
+        bridgeSocket = null;
+        if (event.code === 1012) {
+          setBridgeStatus(t('bridgeReplaced'));
+          return;
+        }
         setBridgeStatus(t('bridgeWaiting'));
         scheduleBridgeReconnect();
       });
-      bridgeSocket.addEventListener('error', () => {
+      socket.addEventListener('error', () => {
+        if (socket !== bridgeSocket) return;
         setBridgeStatus(t('bridgeWaiting'));
       });
     } catch (error) {
@@ -600,6 +627,15 @@
       setBridgeStatus(t('bridgeWaiting'));
       scheduleBridgeReconnect();
     }
+  }
+
+  function restartBridge() {
+    window.clearTimeout(bridgeReconnectTimer);
+    bridgeReconnectDelay = 1000;
+    const previous = bridgeSocket;
+    bridgeSocket = null;
+    if (previous) previous.close(1000, 'Manual bridge restart');
+    connectBridge();
   }
 
   async function importModel(file) {
@@ -640,6 +676,7 @@
       jpeg: ['exportJpeg', 'exportJpegTitle'],
       svg: ['exportSvg', 'exportSvgTitle'],
       opl: ['saveOpl', 'saveOplTitle'],
+      restart: ['restartBridge', 'restartBridgeTitle'],
     };
     Object.entries(labels).forEach(([action, [labelKey, titleKey]]) => {
       const button = panel.querySelector(`[data-action="${action}"]`);
@@ -692,7 +729,7 @@
       #${PANEL_ID} .opcloud-io-actions {
         display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px;
       }
-      #${PANEL_ID} [data-action="opl"] { grid-column: 1 / -1; }
+      #${PANEL_ID} [data-action="opl"], #${PANEL_ID} [data-action="restart"] { grid-column: 1 / -1; }
       #${PANEL_ID} button {
         padding: 7px 9px; border: 0; border-radius: 6px;
         background: #497284; color: white; cursor: pointer; font: inherit;
@@ -721,6 +758,7 @@
         <button type="button" data-action="jpeg" title="${t('exportJpegTitle')}" disabled>${t('exportJpeg')}</button>
         <button type="button" data-action="svg" title="${t('exportSvgTitle')}" disabled>${t('exportSvg')}</button>
         <button type="button" data-action="opl" title="${t('saveOplTitle')}" disabled>${t('saveOpl')}</button>
+        <button type="button" data-action="restart" title="${t('restartBridgeTitle')}">${t('restartBridge')}</button>
       </div>
       <div id="${PANEL_ID}-status" data-kind="info">${t('connecting')}</div>
       <div id="${PANEL_ID}-bridge-status" data-kind="info">${t('bridgeWaiting')}</div>
@@ -742,6 +780,7 @@
     panel.querySelector('[data-action="jpeg"]').addEventListener('click', exportJpeg);
     panel.querySelector('[data-action="svg"]').addEventListener('click', exportSvg);
     panel.querySelector('[data-action="opl"]').addEventListener('click', saveOpl);
+    panel.querySelector('[data-action="restart"]').addEventListener('click', restartBridge);
     panel.querySelector('[data-action="language"]').addEventListener('click', toggleLanguage);
     refreshPanelLanguage();
   }

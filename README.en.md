@@ -38,12 +38,14 @@ The connection architecture is:
 ```text
 Codex / Claude / MCP Client
           ↕ MCP stdio
-Local OPCloud Bridge process
+Per-conversation MCP process
+          ↕ Local IPC
+Shared OPCloud Bridge daemon
           ↕ WebSocket (127.0.0.1:17373)
 Userscript ↔ OPCloud page
 ```
 
-A userscript cannot listen on a browser port, so the local process acts as both an MCP server and a WebSocket server. The userscript connects to it and retries automatically after a disconnect.
+A shared daemon owns the browser WebSocket port. Each MCP conversation connects to that daemon through local IPC, so changing conversations does not require a second listener on the same port. The userscript retries automatically after a disconnect.
 
 ### MCP client configuration
 
@@ -60,7 +62,7 @@ After installing the userscript, an MCP client can launch the bridge directly fr
 }
 ```
 
-Some Windows clients require `npx.cmd` instead of `npx`. Restart the MCP client after configuration, then open or refresh [OPCloud Sandbox](https://opcloud-sandbox.web.app/). The connection is ready when the bottom-right panel shows **MCP: Agent connected**.
+Some Windows clients require `npx.cmd` instead of `npx`. Restart the MCP client after configuration, then open or refresh [OPCloud Sandbox](https://opcloud-sandbox.web.app/). The connection is ready when the bottom-right panel shows **MCP: Local bridge connected**.
 
 You can also clone and run the repository locally:
 
@@ -192,3 +194,11 @@ Before using a coding Agent to generate or modify JSON/`.opcl`, ask it to read [
 ## License
 
 [MIT](./LICENSE)
+
+## Shared sessions and bridge restart (1.6.0)
+
+MCP sessions now share one browser bridge through local IPC instead of each binding port 17373. Closing one session leaves the others connected. The daemon exits 30 seconds after the last session closes and is restarted automatically when needed. Browser operations are serialized; interrupted calls are never replayed automatically.
+
+The bottom-right **Restart bridge** button clears retry delays and reconnects the browser without changing its model. It cannot launch Node or reload a client's MCP tool catalog. A replaced browser tab pauses reconnection until you explicitly restart it, preventing tabs from repeatedly taking over each other's connection.
+
+When upgrading from 1.5.x, update the userscript and refresh OPCloud, then restart the `opcloud` MCP server in your client (or restart the client) to release the old process's port. Tools are now registered before bridge startup, so a port conflict produces a diagnostic from `opcloud_status` instead of hiding the entire tool catalog. The browser's connected label does not imply that the current conversation has loaded the tools.

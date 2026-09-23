@@ -47,7 +47,9 @@ export class BrowserBridge {
       userscriptVersion: null,
     };
 
-    socket.on('message', (data) => this.handleMessage(data));
+    socket.on('message', (data) => {
+      if (this.client === socket) this.handleMessage(data);
+    });
     socket.on('close', () => {
       if (this.client !== socket) return;
       this.client = null;
@@ -125,7 +127,7 @@ export class BrowserBridge {
 
   async close() {
     this.rejectPending(new Error('OPCloud bridge is shutting down.'));
-    if (this.client) this.client.close(1001, 'Server shutdown');
+    if (this.server) for (const socket of this.server.clients) socket.terminate();
     if (!this.server) return;
     await new Promise((resolve) => this.server.close(resolve));
     this.server = null;

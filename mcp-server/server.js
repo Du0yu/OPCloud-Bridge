@@ -3,7 +3,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { BrowserBridge } from './browser-bridge.js';
+import { SharedBridge } from './shared-bridge.js';
 import { validateOpcloudModel } from './model-validation.js';
 
 const port = Number.parseInt(process.env.OPCLOUD_BRIDGE_PORT || '17373', 10);
@@ -12,13 +12,11 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   process.exit(1);
 }
 
-const bridge = new BrowserBridge({ port });
-await bridge.listen();
-console.error(`[OPCloud Bridge] Browser bridge listening on ws://127.0.0.1:${port}`);
+const bridge = new SharedBridge({ port });
 
 const server = new McpServer({
   name: 'opcloud-bridge',
-  version: '1.5.1',
+  version: '1.6.0',
 });
 
 function textResult(value) {
@@ -68,7 +66,7 @@ registerTool('opcloud_status', {
   title: 'OPCloud connection status',
   description: 'Check whether the OPCloud browser tab and userscript are connected to the local bridge.',
 }, async () => {
-  const localStatus = bridge.status();
+  const localStatus = await bridge.status();
   if (!localStatus.connected) return textResult(localStatus);
   const browserStatus = await bridge.call('status');
   return textResult({ ...localStatus, opcloud: browserStatus });
@@ -159,11 +157,18 @@ registerTool('opcloud_review_diagram', {
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
+// Tool discovery must not depend on the browser or the shared daemon being ready.
+const reconnect = setInterval(() => {
+  void bridge.connect().catch(() => {});
+}, 2000);
+void bridge.connect().catch((error) => console.error(`[OPCloud Bridge] ${error.message}`));
 
 async function shutdown() {
+  clearInterval(reconnect);
   await bridge.close();
   process.exit(0);
 }
 
 process.once('SIGINT', shutdown);
 process.once('SIGTERM', shutdown);
+process.stdin.once('end', shutdown);
