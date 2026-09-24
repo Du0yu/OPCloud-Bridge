@@ -35,7 +35,9 @@ Your userscript manager will open its installation confirmation page. The script
 
 The bottom-right panel saves complete model snapshots in browser local storage and displays the saved time. Edits are sampled about 250 ms after interaction, with a one-second polling fallback; rapid edits may be grouped. **Undo last step** restores the previous complete snapshot, including manual imports, Agent imports, and backup recovery. In-memory history is limited to 30 entries with a size budget and resets on refresh.
 
-After refreshing the same tab, choose **Restore backup** or **Keep current model** to replace the backup with the current canvas. Autosave pauses until this choice. Independently opened tabs use separate backup identifiers; duplicated tabs may inherit the identifier. A newly opened tab after closing the original is not guaranteed to recover its identifier, so export important models as `.opcl` files. Disabled or full storage shows an error without disabling in-memory undo. Autosave neither downloads files nor uploads models.
+Since 1.8.1, backups, names, and save times persist in `localStorage`. Refreshing or reopening OPCloud after closing the browser discovers local backups in the same browser profile, including records saved by 1.8.0, without the original tab session ID. Select a model from the list and choose **Restore backup**, or choose **Keep current model** to continue with the current canvas. Autosave pauses until this choice. **Local backups** reopens the list at any time.
+
+Each page load writes a separate record, including duplicated tabs. Restoring or keeping the current model saves subsequent edits to the current page's record and preserves older sessions. Backups are not automatically pruned; disabled or full storage shows an error without disabling in-memory undo. Clearing site data, changing browsers, or using private browsing may make backups unavailable, so export important models as `.opcl` files. Autosave neither downloads files nor uploads models.
 
 ## Agent / MCP mode
 

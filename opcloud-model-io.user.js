@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.8.0
+// @version      1.8.1
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.8.0';
+  const USERSCRIPT_VERSION = '1.8.1';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -33,6 +33,9 @@
       importModel: 'Import model',
       undo: 'Undo last step',
       restoreBackup: 'Restore backup',
+      browseBackups: 'Local backups',
+      chooseBackup: 'Choose a local backup',
+      noBackups: 'No local backups found',
       keepCurrent: 'Keep current model',
       autosaveReady: 'Autosave: waiting for changes',
       autosaveSaved: 'Saved locally: {time}',
@@ -90,6 +93,9 @@
       importModel: '导入模型',
       undo: '撤回上一步',
       restoreBackup: '恢复备份',
+      browseBackups: '本地备份',
+      chooseBackup: '选择本地备份',
+      noBackups: '没有找到本地备份',
       keepCurrent: '保留当前模型',
       autosaveReady: '自动保存：等待修改',
       autosaveSaved: '已保存到浏览器：{time}',
@@ -483,11 +489,63 @@
   let savedAt = null;
   let backupError = null;
   let historyStarted = false;
+  const BACKUP_PREFIX = 'opcloudBridgeBackup:';
+  let availableBackups = [];
+
+  function readLocalBackups() {
+    const backups = [];
+    const storage = page.localStorage;
+    // The prefixed records form a persistent index. Scanning also discovers
+    // 1.8.0 backups without sessionStorage and avoids a shared-index write race.
+    for (let index = 0; index < storage.length; index += 1) {
+      const key = storage.key(index);
+      if (!key?.startsWith(BACKUP_PREFIX)) continue;
+      try {
+        const record = JSON.parse(storage.getItem(key));
+        if (record?.version !== 1 || !Number.isFinite(record.savedAt)) continue;
+        validateModel(record.model);
+        backups.push({ ...record, key });
+      } catch {
+        // A damaged record must not hide other backups or be overwritten.
+      }
+    }
+    return backups.sort((a, b) => b.savedAt - a.savedAt || a.key.localeCompare(b.key));
+  }
+
+  function showBackupChoices() {
+    const select = document.getElementById(`${PANEL_ID}-backup-select`);
+    if (!select) return;
+    select.replaceChildren();
+    for (const backup of availableBackups) {
+      const option = document.createElement('option');
+      option.value = backup.key;
+      option.textContent = `${backup.model.name || 'OPCloud Model'} — ${new Date(backup.savedAt).toLocaleString()}`;
+      select.appendChild(option);
+    }
+    if (pendingBackup) select.value = pendingBackup.key;
+  }
+
+  function browseBackups() {
+    captureModel();
+    try {
+      availableBackups = readLocalBackups();
+      pendingBackup = availableBackups[0] || null;
+      showBackupChoices();
+      if (!pendingBackup) setStatus(t('noBackups'), 'info');
+    } catch (error) {
+      backupError = error.message;
+    }
+    refreshHistoryUi();
+  }
 
   function refreshHistoryUi() {
     const panel = document.getElementById(PANEL_ID);
     if (!panel) return;
     panel.querySelector('[data-action="undo"]').disabled = !initService || history.length === 0;
+    panel.querySelector('[data-action="backups"]').disabled = !initService;
+    const select = document.getElementById(`${PANEL_ID}-backup-select`);
+    select.hidden = !pendingBackup;
+    select.setAttribute('aria-label', t('chooseBackup'));
     for (const action of ['restore', 'keep']) {
       const button = panel.querySelector(`[data-action="${action}"]`);
       button.hidden = !pendingBackup;
@@ -566,18 +624,12 @@
     if (historyStarted) return;
     historyStarted = true;
     try {
-      // Separate tabs must not silently overwrite each other's backups.
-      let tabId = page.sessionStorage.getItem('opcloudBridgeBackupTab');
-      if (!tabId) {
-        tabId = page.crypto.randomUUID();
-        page.sessionStorage.setItem('opcloudBridgeBackupTab', tabId);
-      }
-      backupKey = `opcloudBridgeBackup:${tabId}`;
-      const stored = page.localStorage.getItem(backupKey);
-      if (stored) {
-        pendingBackup = JSON.parse(stored);
-        validateModel(pendingBackup.model);
-      }
+      availableBackups = readLocalBackups();
+      pendingBackup = availableBackups[0] || null;
+      // Each page lifetime writes its own record, even when duplicating a tab.
+      // Restoring or keeping the current canvas never overwrites older sessions.
+      backupKey = `${BACKUP_PREFIX}${page.crypto.randomUUID()}`;
+      showBackupChoices();
     } catch (error) {
       // Never overwrite a backup that could not be read.
       backupKey = null;
@@ -844,6 +896,7 @@
       export: ['exportModel', null],
       import: ['importModel', null],
       undo: ['undo', null],
+      backups: ['browseBackups', null],
       restore: ['restoreBackup', null],
       keep: ['keepCurrent', null],
       jpeg: ['exportJpeg', 'exportJpegTitle'],
@@ -917,6 +970,8 @@
       #${PANEL_ID}-bridge-status[data-kind="ok"] { color: #247344; }
       #${PANEL_ID}-autosave-status { margin-top: 7px; font-size: 11px; color: #607080; overflow-wrap: anywhere; }
       #${PANEL_ID} [data-action="undo"] { grid-column: 1 / -1; }
+      #${PANEL_ID} [data-action="backups"] { grid-column: 1 / -1; }
+      #${PANEL_ID}-backup-select { width: 100%; margin-top: 7px; font: inherit; }
       #${PANEL_ID} [hidden] { display: none; }
     `;
     document.head.appendChild(style);
@@ -933,6 +988,7 @@
         <button type="button" data-action="export" disabled>${t('exportModel')}</button>
         <button type="button" data-action="import" disabled>${t('importModel')}</button>
         <button type="button" data-action="undo" disabled>${t('undo')}</button>
+        <button type="button" data-action="backups" disabled>${t('browseBackups')}</button>
         <button type="button" data-action="restore" hidden disabled>${t('restoreBackup')}</button>
         <button type="button" data-action="keep" hidden disabled>${t('keepCurrent')}</button>
         <button type="button" data-action="jpeg" title="${t('exportJpegTitle')}" disabled>${t('exportJpeg')}</button>
@@ -942,6 +998,7 @@
       </div>
       <div id="${PANEL_ID}-status" data-kind="info">${t('connecting')}</div>
       <div id="${PANEL_ID}-autosave-status">${t('autosaveReady')}</div>
+      <select id="${PANEL_ID}-backup-select" aria-label="${t('chooseBackup')}" hidden></select>
       <div id="${PANEL_ID}-bridge-status" data-kind="info">${t('bridgeWaiting')}</div>
     `;
     document.body.appendChild(panel);
@@ -959,6 +1016,11 @@
     panel.querySelector('[data-action="export"]').addEventListener('click', exportModel);
     panel.querySelector('[data-action="import"]').addEventListener('click', () => importInput.click());
     panel.querySelector('[data-action="undo"]').addEventListener('click', undoModel);
+    panel.querySelector('[data-action="backups"]').addEventListener('click', browseBackups);
+    document.getElementById(`${PANEL_ID}-backup-select`).addEventListener('change', (event) => {
+      pendingBackup = availableBackups.find((backup) => backup.key === event.target.value) || null;
+      refreshHistoryUi();
+    });
     panel.querySelector('[data-action="restore"]').addEventListener('click', restoreBackup);
     panel.querySelector('[data-action="keep"]').addEventListener('click', keepCurrentModel);
     panel.querySelector('[data-action="jpeg"]').addEventListener('click', exportJpeg);
