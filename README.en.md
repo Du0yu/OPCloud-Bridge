@@ -31,6 +31,12 @@ Your userscript manager will open its installation confirmation page. The script
 - Connect the userscript to the local MCP bridge without modifying the OPCloud website
 - Display the plugin interface in English or Chinese, selected automatically from the browser language or manually from the panel
 
+## Autosave and undo
+
+The bottom-right panel saves complete model snapshots in browser local storage and displays the saved time. Edits are sampled about 250 ms after interaction, with a one-second polling fallback; rapid edits may be grouped. **Undo last step** restores the previous complete snapshot, including manual imports, Agent imports, and backup recovery. In-memory history is limited to 30 entries with a size budget and resets on refresh.
+
+After refreshing the same tab, choose **Restore backup** or **Keep current model** to replace the backup with the current canvas. Autosave pauses until this choice. Independently opened tabs use separate backup identifiers; duplicated tabs may inherit the identifier. A newly opened tab after closing the original is not guaranteed to recover its identifier, so export important models as `.opcl` files. Disabled or full storage shows an error without disabling in-memory undo. Autosave neither downloads files nor uploads models.
+
 ## Agent / MCP mode
 
 The connection architecture is:

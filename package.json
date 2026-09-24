@@ -1,6 +1,6 @@
 {
   "name": "opcloud-bridge-mcp",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "Userscript and local MCP bridge for OPCloud Sandbox",
   "type": "module",
   "bin": {
@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "start": "node mcp-server/server.js",
-    "test": "node --check opcloud-model-io.user.js && node --check mcp-server/server.js && node scripts/test-userscript-i18n.js && node scripts/test-userscript-runtime.js && node scripts/validate-example.js && node scripts/test-model-validation.js && node scripts/test-iso-rules.js && node scripts/test-mcp-bridge.js && node scripts/test-bridge-request-safety.js"
+    "test": "node --check opcloud-model-io.user.js && node --check mcp-server/server.js && node scripts/test-userscript-i18n.js && node scripts/test-userscript-runtime.js && node scripts/test-userscript-history.js && node scripts/validate-example.js && node scripts/test-model-validation.js && node scripts/test-iso-rules.js && node scripts/test-mcp-bridge.js && node scripts/test-bridge-request-safety.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

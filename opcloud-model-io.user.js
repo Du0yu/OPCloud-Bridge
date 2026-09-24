@@ -3,7 +3,7 @@
 // @name:en      OPCloud Bridge - Model Import/Export
 // @name:zh-CN   OPCloud 图模型导入导出
 // @namespace    https://opcloud-sandbox.web.app/
-// @version      1.7.1
+// @version      1.8.0
 // @description  Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:en Add model import/export and a local MCP Agent bridge to OPCloud Sandbox
 // @description:zh-CN 为 OPCloud Sandbox 增加模型导入导出与本地 MCP Agent 桥接
@@ -21,7 +21,7 @@
   const page = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
   const PANEL_ID = 'opcloud-io-userscript-panel';
   const STATUS_OK_MS = 3200;
-  const USERSCRIPT_VERSION = '1.7.1';
+  const USERSCRIPT_VERSION = '1.8.0';
   const DEFAULT_BRIDGE_URL = 'ws://127.0.0.1:17373';
   const LANGUAGE_STORAGE_KEY = 'opcloudBridgeLanguage';
   const TRANSLATIONS = {
@@ -31,6 +31,15 @@
       switchLanguageTitle: 'Switch to Chinese',
       exportModel: 'Export model',
       importModel: 'Import model',
+      undo: 'Undo last step',
+      restoreBackup: 'Restore backup',
+      keepCurrent: 'Keep current model',
+      autosaveReady: 'Autosave: waiting for changes',
+      autosaveSaved: 'Saved locally: {time}',
+      autosavePending: 'Previous backup found. Restore it or keep the current model to resume autosave.',
+      autosaveFailed: 'Local backup unavailable: {message}',
+      undoDone: 'Previous model restored',
+      undoFailed: 'Restore failed: {message}',
       exportJpeg: 'Export JPEG',
       exportSvg: 'Export SVG',
       saveOpl: 'Save OPL',
@@ -79,6 +88,15 @@
       switchLanguageTitle: '切换到英文',
       exportModel: '导出模型',
       importModel: '导入模型',
+      undo: '撤回上一步',
+      restoreBackup: '恢复备份',
+      keepCurrent: '保留当前模型',
+      autosaveReady: '自动保存：等待修改',
+      autosaveSaved: '已保存到浏览器：{time}',
+      autosavePending: '发现上次备份。恢复备份或保留当前模型后，继续自动保存。',
+      autosaveFailed: '浏览器备份不可用：{message}',
+      undoDone: '已恢复上一步模型',
+      undoFailed: '恢复失败：{message}',
       exportJpeg: '导出 JPEG',
       exportSvg: '导出 SVG',
       saveOpl: '保存 OPL',
@@ -275,6 +293,7 @@
     buttons.forEach((button) => { button.disabled = !initService; });
     if (initService) {
       setStatus(t('connected'), 'ok', 0);
+      startModelHistory();
     } else {
       setStatus(t('connectionFailed'), 'error', 0);
     }
@@ -437,9 +456,10 @@
     initService.modelService.setName(json.name || 'Imported Model');
   }
 
-  function renderImportedModel(json) {
+  function renderImportedModel(json, recordHistory = true) {
     const model = currentModel();
     const previous = JSON.parse(JSON.stringify(model.toJson()));
+    if (recordHistory) captureModel();
     try {
       applyImportedModel(model, json);
     } catch (error) {
@@ -451,6 +471,134 @@
       }
       throw error;
     }
+    if (recordHistory) captureModel();
+  }
+
+  // Complete native exports are checkpoints, never partial graph reconstructions.
+  const history = [];
+  let historyCurrent = null;
+  let backupKey = null;
+  let pendingBackup = null;
+  let savedSnapshot = null;
+  let savedAt = null;
+  let backupError = null;
+  let historyStarted = false;
+
+  function refreshHistoryUi() {
+    const panel = document.getElementById(PANEL_ID);
+    if (!panel) return;
+    panel.querySelector('[data-action="undo"]').disabled = !initService || history.length === 0;
+    for (const action of ['restore', 'keep']) {
+      const button = panel.querySelector(`[data-action="${action}"]`);
+      button.hidden = !pendingBackup;
+      button.disabled = !initService;
+    }
+    const status = document.getElementById(`${PANEL_ID}-autosave-status`);
+    status.textContent = backupError ? t('autosaveFailed', { message: backupError })
+      : pendingBackup ? t('autosavePending')
+        : savedAt ? t('autosaveSaved', { time: new Date(savedAt).toLocaleTimeString() }) : t('autosaveReady');
+  }
+
+  function saveCheckpoint() {
+    if (!backupKey || pendingBackup || !historyCurrent || savedSnapshot === historyCurrent) return;
+    try {
+      const timestamp = Date.now();
+      page.localStorage.setItem(backupKey, JSON.stringify({ version: 1, savedAt: timestamp, model: JSON.parse(historyCurrent) }));
+      savedSnapshot = historyCurrent;
+      savedAt = timestamp;
+      backupError = null;
+    } catch (error) {
+      backupError = error.message;
+    }
+  }
+
+  function captureModel() {
+    if (!historyStarted) return;
+    try {
+      const snapshot = JSON.stringify(currentModel().toJson());
+      if (snapshot !== historyCurrent) {
+        if (historyCurrent !== null) history.push(historyCurrent);
+        // Bound both entry count and retained text size for large models.
+        while (history.length > 30 || (history.length > 1 && history.reduce((n, item) => n + item.length, 0) > 10000000)) history.shift();
+        historyCurrent = snapshot;
+      }
+      saveCheckpoint();
+    } catch (error) {
+      backupError = error.message;
+    }
+    refreshHistoryUi();
+  }
+
+  function undoModel() {
+    captureModel();
+    if (!history.length) return;
+    try {
+      renderImportedModel(JSON.parse(history[history.length - 1]), false);
+      historyCurrent = JSON.stringify(currentModel().toJson());
+      history.pop();
+      saveCheckpoint();
+      setStatus(t('undoDone'), 'ok');
+    } catch (error) {
+      setStatus(t('undoFailed', { message: error.message }), 'error', 7000);
+    }
+    refreshHistoryUi();
+  }
+
+  function restoreBackup() {
+    if (!pendingBackup) return;
+    try {
+      renderImportedModel(validateModel(pendingBackup.model));
+      pendingBackup = null;
+      saveCheckpoint();
+      setStatus(t('undoDone'), 'ok');
+    } catch (error) {
+      setStatus(t('undoFailed', { message: error.message }), 'error', 7000);
+    }
+    refreshHistoryUi();
+  }
+
+  function keepCurrentModel() {
+    pendingBackup = null;
+    captureModel();
+  }
+
+  function startModelHistory() {
+    if (historyStarted) return;
+    historyStarted = true;
+    try {
+      // Separate tabs must not silently overwrite each other's backups.
+      let tabId = page.sessionStorage.getItem('opcloudBridgeBackupTab');
+      if (!tabId) {
+        tabId = page.crypto.randomUUID();
+        page.sessionStorage.setItem('opcloudBridgeBackupTab', tabId);
+      }
+      backupKey = `opcloudBridgeBackup:${tabId}`;
+      const stored = page.localStorage.getItem(backupKey);
+      if (stored) {
+        pendingBackup = JSON.parse(stored);
+        validateModel(pendingBackup.model);
+      }
+    } catch (error) {
+      // Never overwrite a backup that could not be read.
+      backupKey = null;
+      pendingBackup = null;
+      backupError = error.message;
+    }
+    captureModel();
+    window.setInterval(captureModel, 1000);
+    let editTimer;
+    const afterEdit = (event) => {
+      if (event.target?.closest?.(`#${PANEL_ID}`)) return;
+      window.clearTimeout(editTimer);
+      editTimer = window.setTimeout(captureModel, 250);
+    };
+    document.addEventListener('pointerup', afterEdit);
+    document.addEventListener('keyup', afterEdit);
+    document.addEventListener('change', afterEdit);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') captureModel();
+    });
+    window.addEventListener('pagehide', captureModel);
   }
 
   function plainOpl(value) {
@@ -695,6 +843,9 @@
     const labels = {
       export: ['exportModel', null],
       import: ['importModel', null],
+      undo: ['undo', null],
+      restore: ['restoreBackup', null],
+      keep: ['keepCurrent', null],
       jpeg: ['exportJpeg', 'exportJpegTitle'],
       svg: ['exportSvg', 'exportSvgTitle'],
       opl: ['saveOpl', 'saveOplTitle'],
@@ -705,6 +856,7 @@
       button.textContent = t(labelKey);
       if (titleKey) button.title = t(titleKey);
     });
+    refreshHistoryUi();
 
     setStatus(initService ? t('connected') : t('connecting'), initService ? 'ok' : 'info', 0);
     if (bridgeSocket?.readyState === page.WebSocket.OPEN) {
@@ -763,6 +915,9 @@
       #${PANEL_ID}-status[data-kind="error"] { color: #b42318; }
       #${PANEL_ID}-bridge-status { margin-top: 2px; font-size: 11px; color: #788792; }
       #${PANEL_ID}-bridge-status[data-kind="ok"] { color: #247344; }
+      #${PANEL_ID}-autosave-status { margin-top: 7px; font-size: 11px; color: #607080; overflow-wrap: anywhere; }
+      #${PANEL_ID} [data-action="undo"] { grid-column: 1 / -1; }
+      #${PANEL_ID} [hidden] { display: none; }
     `;
     document.head.appendChild(style);
 
@@ -777,12 +932,16 @@
       <div class="opcloud-io-actions">
         <button type="button" data-action="export" disabled>${t('exportModel')}</button>
         <button type="button" data-action="import" disabled>${t('importModel')}</button>
+        <button type="button" data-action="undo" disabled>${t('undo')}</button>
+        <button type="button" data-action="restore" hidden disabled>${t('restoreBackup')}</button>
+        <button type="button" data-action="keep" hidden disabled>${t('keepCurrent')}</button>
         <button type="button" data-action="jpeg" title="${t('exportJpegTitle')}" disabled>${t('exportJpeg')}</button>
         <button type="button" data-action="svg" title="${t('exportSvgTitle')}" disabled>${t('exportSvg')}</button>
         <button type="button" data-action="opl" title="${t('saveOplTitle')}" disabled>${t('saveOpl')}</button>
         <button type="button" data-action="restart" title="${t('restartBridgeTitle')}">${t('restartBridge')}</button>
       </div>
       <div id="${PANEL_ID}-status" data-kind="info">${t('connecting')}</div>
+      <div id="${PANEL_ID}-autosave-status">${t('autosaveReady')}</div>
       <div id="${PANEL_ID}-bridge-status" data-kind="info">${t('bridgeWaiting')}</div>
     `;
     document.body.appendChild(panel);
@@ -799,6 +958,9 @@
 
     panel.querySelector('[data-action="export"]').addEventListener('click', exportModel);
     panel.querySelector('[data-action="import"]').addEventListener('click', () => importInput.click());
+    panel.querySelector('[data-action="undo"]').addEventListener('click', undoModel);
+    panel.querySelector('[data-action="restore"]').addEventListener('click', restoreBackup);
+    panel.querySelector('[data-action="keep"]').addEventListener('click', keepCurrentModel);
     panel.querySelector('[data-action="jpeg"]').addEventListener('click', exportJpeg);
     panel.querySelector('[data-action="svg"]').addEventListener('click', exportSvg);
     panel.querySelector('[data-action="opl"]').addEventListener('click', saveOpl);
