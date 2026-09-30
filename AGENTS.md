@@ -13,6 +13,8 @@ Official reference: https://www.iso.org/standard/84612.html
 
 Rule coverage and evidence are tracked in [`docs/iso-19450-2024-coverage.md`](./docs/iso-19450-2024-coverage.md). Distinguish verified definitions, bridge-specific serialization/profile checks, and clauses awaiting full-text review. A passing validator result is not an ISO conformance finding.
 
+For a practical purpose-first workflow, read [`docs/how-to-draw-opm.md`](./docs/how-to-draw-opm.md), adapted from the user's SYSH5000 Week 2–5 study summary. Treat its teaching heuristics as guidance, not verified course quotations or additional ISO requirements. The MCP modeling guide returns this document too.
+
 ## Objective
 
 Produce models that:
@@ -71,11 +73,12 @@ The abbreviated objects above illustrate required top-level keys only. For a rea
 
 ### Things
 
+- Start with purpose, beneficiary, benefit-providing object and main function; identify transformations before adding supporting architecture. A beneficiary is not automatically an Agent.
 - Name objects with nouns, such as `Home Cook`, `Soup Pot`, or `Vegetable Soup`.
 - Name processes with gerunds or action nouns, such as `Vegetable Soup Cooking` or `Ingredient Preparing`.
 - Use an object state only when the same object changes over time, such as `not ready` to `ready`.
 - Do not model two unrelated entities as states of one object.
-- Keep peer processes at the same visual level and do not add Invocation links between them.
+- Keep peer processes at the same visual level. Use Invocation only for a genuine direct trigger, never merely to indicate their visual or narrative order; preserve relevant intermediate objects.
 
 ### Essence and affiliation
 

@@ -26,6 +26,11 @@ export async function getModelingGuide() {
   return {
     source: 'AGENTS.md',
     instructions: await readFile(new URL('../AGENTS.md', import.meta.url), 'utf8'),
+    howTo: {
+      source: 'docs/how-to-draw-opm.md',
+      provenance: 'Adapted from a user-provided SYSH5000 Week 2–5 study summary; original course materials not verified. Practical guidance, not an ISO conformance specification.',
+      content: await readFile(new URL('../docs/how-to-draw-opm.md', import.meta.url), 'utf8'),
+    },
     standardsCoverage: {
       source: 'docs/iso-19450-2024-coverage.md',
       status: 'partial_checks_not_conformance_assessed',

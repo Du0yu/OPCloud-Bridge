@@ -211,6 +211,10 @@ npm test
 
 ## Agent 使用说明
 
+建模步骤见 [How to Draw an OPM Diagram](docs/how-to-draw-opm.md)：从用途、受益者和主功能出发，确定变换与使能对象，再补系统边界和结构，最后检查生成 OPL 与实际图像。该文根据用户提供的 SYSH5000 Week 2–5 学习摘要整理，包含关系选择表、咖啡机示例和十项复核清单；它是参考方法，不是已核实的课程原文或 ISO 条文。
+
+`opcloud_get_modeling_guide` 的 `howTo` 字段会返回全文，无需客户端读取本地文件。指南随安装包发布，Tagged Link 等未支持能力仍遵循原生验证和桥接支持限制。
+
 如果使用编码 Agent 生成或修改 JSON/`.opcl`，请让 Agent 先阅读 [`AGENTS.md`](./AGENTS.md)。它要求 Agent 交付可直接导入的完整文件，并定义了 OPCloud JSON 引用规则、OPM 连线枚举、状态转换方式、OPL 对应句式和提交前校验流程。
 
 ## 隐私

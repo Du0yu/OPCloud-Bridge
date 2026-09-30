@@ -189,6 +189,8 @@ These are internal site APIs. A substantial future OPCloud frontend change may r
 
 ## Instructions for Agents
 
+See [How to Draw an OPM Diagram](docs/how-to-draw-opm.md) for a purpose-first workflow, relation selection tables, a coffee-machine example and a ten-question review checklist. This Chinese-language guide is adapted from the user's SYSH5000 Week 2–5 study summary; the original course materials have not been verified. It is practical guidance, not an additional ISO specification. The complete document is bundled with the package and returned in the `howTo` field of `opcloud_get_modeling_guide`, including when the browser is offline.
+
 Before using a coding Agent to generate or modify JSON/`.opcl`, ask it to read [`AGENTS.md`](./AGENTS.md). That document requires complete, directly importable files and defines OPCloud JSON reference rules, OPM link enums, state transitions, expected OPL forms, and pre-delivery validation.
 
 ## Privacy

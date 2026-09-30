@@ -65,7 +65,7 @@ function registerTool(name, definition, handler) {
 
 registerTool('opcloud_get_modeling_guide', {
   title: 'Read OPCloud modeling rules',
-  description: 'Read this before creating or modifying an OPCloud model. Returns the repository AGENTS.md rules, supported native element/link types, and validation limits. Available without a browser connection. Then call opcloud_get_model_template for complete export structures.',
+  description: 'Read this before creating or modifying an OPCloud model. Returns AGENTS.md rules, a practical purpose-first how-to with relation choices, an example and a review checklist, supported native types, and ISO coverage limits. Available without a browser connection. Then call opcloud_get_model_template for complete export structures.',
   annotations: { readOnlyHint: true, openWorldHint: false },
 }, async () => textResult(await getModelingGuide()));
 
