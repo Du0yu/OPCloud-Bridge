@@ -71,6 +71,13 @@ The abbreviated objects above illustrate required top-level keys only. For a rea
 - Express domain-specific concepts through the names, states, and native relations of these elements. If a requested notation cannot be expressed with native elements and links, explain the limitation instead of introducing custom notation.
 - These restrictions govern model content, not the required OPD containers, metadata, or bridge control-panel UI. Continue preserving required export fields.
 
+### Preserve native colors
+
+- Use OPCloud's native default colors for new Objects, Processes, States, links, labels, and diagram backgrounds. Do not customize fill, stroke, text, or background colors, or introduce color coding for grouping, emphasis, or domain semantics.
+- When editing an existing model, preserve its serialized color properties; do not recolor it or silently reset its palette. Reuse verified native default styling for new elements rather than copying custom colors from an existing element.
+- Do not override model colors through CSS, SVG, HTML, canvas overlays, or image post-processing. Review the actual OPCloud rendering to confirm the palette is preserved.
+- This is a project presentation rule, not an ISO conformance requirement; it applies to model diagrams, not the bridge control-panel UI.
+
 ### Things
 
 - Start with purpose, beneficiary, benefit-providing object and main function; identify transformations before adding supporting architecture. A beneficiary is not automatically an Agent.
